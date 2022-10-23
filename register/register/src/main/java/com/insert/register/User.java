@@ -14,14 +14,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String username;
+    private String userName;
     private Long phoneNumber;
     private String email;
     private String password;
 
     public User(Long id, String username, Long phoneNumber, String email, String password) {
+        System.out.println(password);
         this.id = id;
-        this.username = username;
+        this.userName = username;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
@@ -36,7 +37,7 @@ public class User {
     }
 
     public void setUsername (String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     public void phoneNumber (Long phoneNumber) {
@@ -52,7 +53,7 @@ public class User {
     }
 
     public String getUsername() {
-        return username;
+        return userName;
     }
 
     public Long getPhonenumber() {

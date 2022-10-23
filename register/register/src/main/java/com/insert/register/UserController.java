@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "*")
+@CrossOrigin
 public class UserController {
 
    @Autowired
@@ -31,10 +31,9 @@ public class UserController {
    }
 
 
-   @PostMapping(consumes = "application/x-www-form-urlencoded")
-   @ResponseStatus(HttpStatus.OK)
-   public void create(User user) {
-      System.out.println(user.getUsername());
+   @PostMapping("/add")
+   public String create(@RequestBody User user) {
+      return "New User Created";
       //userRepository.save(user);
    }
    /* 
