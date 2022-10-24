@@ -2,8 +2,6 @@ package com.insert.register.Card;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -12,12 +10,8 @@ import javax.persistence.Table;
 public class Card {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer cardID;
-
-
-   // @Column(name="userID")
-   // private String userID;
+    @Column(name="cardID")
+    private int cardID;   
     @Column(name="cardNumber")
     private String cardNumber;
     @Column(name="cardName")
@@ -29,8 +23,8 @@ public class Card {
     @Column(name="billZip")
     private String billZip;
 
-    public Card(String cardNumber, String cardName, String expMonth, String expYear, String billZip) {
-       // this.userID = userID;
+    public Card(int cardID, String cardNumber, String cardName, String expMonth, String expYear, String billZip) {
+        this.cardID = cardID;
         this.cardNumber = cardNumber;
         this.cardName = cardName;
         this.expMonth = expMonth;
@@ -42,8 +36,8 @@ public class Card {
     {
     }
 
-    public void setCardId(Integer id) {
-        this.cardID = id;
+    public void setCardId(int cardID) {
+        this.cardID = cardID;
     }
 
     public Integer getId() {
@@ -68,6 +62,10 @@ public class Card {
 
     public void setBillZip (String billZip) {
         this.billZip = billZip;
+    }
+
+    public int getCardID() {
+        return cardID;
     }
 
     public String getCardNumber() {

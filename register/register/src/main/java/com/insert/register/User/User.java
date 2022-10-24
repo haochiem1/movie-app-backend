@@ -2,10 +2,23 @@ package com.insert.register.User;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+enum registeredPromotion {
+    Yes,
+    No;
+}
+
+enum currentState {
+    Active,
+    Inactive,
+    Suspended;
+}
 
 @Entity
 @Table(name = "userinfo")
@@ -26,13 +39,36 @@ public class User {
     @Column(name="userPassword")
     private String userPassword;
 
-    public User(String firstname, String lastname, String phoneNumber, String email, String password) {
-        //this.userID = id;
+    @Column(name="currentState", columnDefinition = "ENUM('Active', 'Inactive', 'Suspended')")
+    @Enumerated(EnumType.STRING)
+    private currentState state;
+
+    @Column(name="registeredPromotion", columnDefinition = "ENUM('Yes', 'No')")
+    @Enumerated(EnumType.STRING)
+    private registeredPromotion promotion;
+
+    @Column(name ="verificationCode", length = 64)
+    private String verificationCode;
+
+
+    public User(String firstname, String lastname, String phoneNumber, String email, String password, String state, String promotion) {
         this.firstName = firstname;
         this.lastName = lastname;
         this.phoneNumber = phoneNumber;
         this.userEmail = email;
         this.userPassword = password;
+        if (state.equals("Active")) {
+            this.state = currentState.Active;
+        } else if (state.equals("Inactive")) {
+            this.state = currentState.Inactive;
+        } else {
+            this.state = currentState.Suspended;
+        }
+        if (promotion.equals("true")) {
+            this.promotion = registeredPromotion.Yes;
+        } else {
+            this.promotion = registeredPromotion.No;
+        }
     }
 
     public User()

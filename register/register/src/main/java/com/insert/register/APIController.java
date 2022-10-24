@@ -12,6 +12,7 @@ import com.insert.register.Address.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,9 +35,14 @@ public class APIController {
    @Autowired
    private UserService userService; 
 
+   @Autowired
+   private JavaMailSender mailSender;
+
    private final UserRepository userRepository;
    private final CardRepository cardRepository;
    private final AddressRepository addressRepository;
+
+   private User currUser;
 
    public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository) {
       this.userRepository = userRepository;
@@ -52,6 +58,8 @@ public class APIController {
       String userPhonenumber = body.get("phoneNumber");
       String userEmail = body.get("userEmail");
       String userPassword = body.get("userPassword");
+      String promotions = body.get("promotions");
+      System.out.println(promotions);
       if (userPhonenumber.length() != 10) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please enter a valid phone number");
       }
@@ -60,9 +68,19 @@ public class APIController {
       if (emails.size() == 1) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An account with that email already exists");
       }
-      userRepository.save(new User(firstName, lastName, userPhonenumber, userEmail, userPassword));
+      currUser = new User(firstName, lastName, userPhonenumber, userEmail, userPassword,"Inactive", promotions);
+      userRepository.save(currUser);
+      sendVerificationEmail(currUser);
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("New user created");
       
+   }
+
+   public void sendVerificationEmail(User user) {
+      String subject = "Please verify your registration";
+      String senderName = "Fandangotothepolls Team";
+      String mailContent = "<P>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
+      mailContent += "<p>Here is your verification code to verify your registration: "; //+ verificationCode + "</p>"; 
+      mailContent += "<p>The Fandangotothepolls Team</p>";
    }
 
    @PostMapping("/optional")
@@ -78,12 +96,9 @@ public class APIController {
       String expMonth = body.get("expMonth");
       String expYear = body.get("expYear");
       String billZip = body.get("billZip");
-      System.out.println("HERE");
-      System.out.println(state);
-      cardRepository.save(new Card(cardNumber, cardName, expMonth, expYear, billZip));
-      addressRepository.save(new Address(street, aptNum, city, state, zipcode));
+      cardRepository.save(new Card(currUser.getId(), cardNumber, cardName, expMonth, expYear, billZip));
+      addressRepository.save(new Address(currUser.getId(), street, aptNum, city, state, zipcode));
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("New user created");
-      
    }
 
    @GetMapping("/getAll")

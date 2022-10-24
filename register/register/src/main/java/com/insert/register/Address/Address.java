@@ -10,6 +10,8 @@ import javax.persistence.Table;
 public class Address {
 
     @Id
+    @Column(name="addressID")
+    private int addressID;
     @Column(name="street")
     private String street;
     @Column(name="aptNum")
@@ -21,7 +23,8 @@ public class Address {
     @Column(name="zipcode")
     private String zipcode;
 
-    public Address(String street, String aptNum, String city, String state, String zipcode) {
+    public Address(int addressID, String street, String aptNum, String city, String state, String zipcode) {
+        this.addressID = addressID;
         this.street = street;
         this.aptNum = aptNum;
         this.city = city;
@@ -31,6 +34,10 @@ public class Address {
 
     public Address()
     {
+    }
+
+    public void setAddressID (int addressID) {
+        this.addressID = addressID;
     }
 
     public void setStreet (String street) {
@@ -51,6 +58,10 @@ public class Address {
 
     public void setZipCode (String zipcode) {
         this.zipcode = zipcode;
+    }
+
+    public int getAddressID() {
+        return addressID;
     }
 
     public String getStreet() {

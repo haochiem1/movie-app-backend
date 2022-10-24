@@ -24,4 +24,5 @@ public class UserServiceImpl implements UserService {
     public User getUser(int id){
         return getAllUsers().stream().filter(a -> a.getId().equals(id)).findFirst().get();
     }
+
 }
