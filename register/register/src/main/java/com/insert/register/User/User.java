@@ -1,4 +1,4 @@
-package com.insert.register;
+package com.insert.register.User;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,18 +15,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userID;
 
-    @Column(name="userName")
-    private String userName;
+    @Column(name="firstName")
+    private String firstName;
+    @Column(name="lastName")
+    private String lastName;
     @Column(name="phoneNumber")
     private String phoneNumber;
-    @Column(name="userEmail")
+    @Column(name="userEmail", unique=true)
     private String userEmail;
     @Column(name="userPassword")
     private String userPassword;
 
-    public User(String username, String phoneNumber, String email, String password) {
+    public User(String firstname, String lastname, String phoneNumber, String email, String password) {
         //this.userID = id;
-        this.userName = username;
+        this.firstName = firstname;
+        this.lastName = lastname;
         this.phoneNumber = phoneNumber;
         this.userEmail = email;
         this.userPassword = password;
@@ -44,11 +47,15 @@ public class User {
         return userID;
     }
 
-    public void setUsername (String username) {
-        this.userName = username;
+    public void setFirstName (String firstname) {
+        this.firstName = firstname;
     }
 
-    public void phoneNumber (String phoneNumber) {
+    public void setLastName (String lastname) {
+        this.lastName = lastname;
+    }
+
+    public void setPhoneNumber (String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -60,8 +67,12 @@ public class User {
         this.userPassword = password;
     }
 
-    public String getUsername() {
-        return userName;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public String getPhonenumber() {

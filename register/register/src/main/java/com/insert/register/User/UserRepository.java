@@ -1,4 +1,4 @@
-package com.insert.register;
+package com.insert.register.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
