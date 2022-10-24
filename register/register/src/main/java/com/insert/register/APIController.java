@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,5 +91,10 @@ public class APIController {
       return userService.getAllUsers();
    }
 
+   @GetMapping("/getAll/{id}")
+   public User getUser(@PathVariable int id){
+      return userService.getUser(id);
+   }
+   
 }
 
