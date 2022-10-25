@@ -36,6 +36,9 @@ public class APIController {
    private UserService userService; 
 
    @Autowired
+   private AddressService addressService; 
+
+   @Autowired
    private JavaMailSender mailSender;
 
    private final UserRepository userRepository;
@@ -64,8 +67,8 @@ public class APIController {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please enter a valid phone number");
       }
       String sql = "SELECT userID FROM userinfo WHERE userEmail = '" + userEmail + "'";
-      List<String> emails = jdbcTemplate.queryForList(sql, String.class);
-      if (emails.size() == 1) {
+      List<String> ids = jdbcTemplate.queryForList(sql, String.class);
+      if (ids.size() == 1) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An account with that email already exists");
       }
       currUser = new User(firstName, lastName, userPhonenumber, userEmail, userPassword,"Inactive", promotions);
@@ -109,6 +112,11 @@ public class APIController {
    @GetMapping("/getAll/{id}")
    public User getUser(@PathVariable int id){
       return userService.getUser(id);
+   }
+
+   @GetMapping("/getAllAddresses/{id}")
+   public Address getAddress(@PathVariable int id){
+      return addressService.getAddress(id);
    }
    
 }

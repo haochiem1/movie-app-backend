@@ -60,7 +60,7 @@ public class Address {
         this.zipcode = zipcode;
     }
 
-    public int getAddressID() {
+    public Integer getAddressID() {
         return addressID;
     }
 

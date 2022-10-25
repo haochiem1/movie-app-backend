@@ -19,4 +19,9 @@ public class AddressServiceImpl implements AddressService {
     public List<Address> getAllAddresses(){
         return addressRepository.findAll();
     }
+
+    @Override
+    public Address getAddress(int id){
+        return getAllAddresses().stream().filter(a -> a.getAddressID().equals(id)).findFirst().get();
+    }
 }
