@@ -47,11 +47,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private registeredPromotion promotion;
 
-    @Column(name ="verificationCode", length = 64)
+    @Column(name ="verificationCode")
     private String verificationCode;
 
+    @Column(name = "secretKey")
+    private String secretKey;
 
-    public User(String firstname, String lastname, String phoneNumber, String email, String password, String state, String promotion) {
+
+    public User(String firstname, String lastname, String phoneNumber, String email, String password, String state, String promotion, String verificationCode, String secretKey) {
         this.firstName = firstname;
         this.lastName = lastname;
         this.phoneNumber = phoneNumber;
@@ -69,6 +72,8 @@ public class User {
         } else {
             this.promotion = registeredPromotion.No;
         }
+        this.verificationCode = verificationCode;
+        this.secretKey = secretKey;
     }
 
     public User()
@@ -77,10 +82,6 @@ public class User {
 
     public void setId(Integer id) {
         this.userID = id;
-    }
-
-    public Integer getId() {
-        return userID;
     }
 
     public void setFirstName (String firstname) {
@@ -103,6 +104,10 @@ public class User {
         this.userPassword = password;
     }
 
+    public void setVerificationCode (String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -121,5 +126,17 @@ public class User {
 
     public String getEmail() {
         return userEmail;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public Integer getId() {
+        return userID;
     }
 }

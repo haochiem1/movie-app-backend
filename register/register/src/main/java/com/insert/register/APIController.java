@@ -1,18 +1,22 @@
 package com.insert.register;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
+import javax.mail.MessagingException;
 
 import com.insert.register.Address.AddressRepository;
 import com.insert.register.Card.CardRepository;
 import com.insert.register.User.*;
 import com.insert.register.Card.*;
 import com.insert.register.Address.*;
+import com.insert.register.Security.*;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,9 +42,6 @@ public class APIController {
    @Autowired
    private AddressService addressService; 
 
-   @Autowired
-   private JavaMailSender mailSender;
-
    private final UserRepository userRepository;
    private final CardRepository cardRepository;
    private final AddressRepository addressRepository;
@@ -54,7 +55,7 @@ public class APIController {
    }
 
    @PostMapping("/add")
-   public ResponseEntity<String> addUser(@RequestBody Map<String, String> body)
+   public ResponseEntity<String> addUser(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
    {
       String firstName = body.get("firstName");
       String lastName = body.get("lastName");
@@ -62,7 +63,6 @@ public class APIController {
       String userEmail = body.get("userEmail");
       String userPassword = body.get("userPassword");
       String promotions = body.get("promotions");
-      System.out.println(promotions);
       if (userPhonenumber.length() != 10) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please enter a valid phone number");
       }
@@ -71,20 +71,40 @@ public class APIController {
       if (ids.size() == 1) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An account with that email already exists");
       }
-      currUser = new User(firstName, lastName, userPhonenumber, userEmail, userPassword,"Inactive", promotions);
-      userRepository.save(currUser);
-      sendVerificationEmail(currUser);
+      String verificationCode = generateVerificationCode();
+      String key = Security.generateSecretKey();
+      String encryptedPass = "";
+      String encryptedCode = "";
+      try {
+         encryptedPass = Security.encrypt(userPassword, key);
+         encryptedCode = Security.encrypt(verificationCode, key);
+      } catch (Exception e) {
+         System.out.println(e.getMessage());
+      }
+      currUser = new User(firstName, lastName, userPhonenumber, userEmail, encryptedPass ,"Active", promotions, encryptedCode, key);
+      userService.sendVerificationEmail(currUser);
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("New user created");
-      
    }
 
-   public void sendVerificationEmail(User user) {
-      String subject = "Please verify your registration";
-      String senderName = "Fandangotothepolls Team";
-      String mailContent = "<P>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
-      mailContent += "<p>Here is your verification code to verify your registration: "; //+ verificationCode + "</p>"; 
-      mailContent += "<p>The Fandangotothepolls Team</p>";
-   }
+   @PostMapping("/verification")
+   public ResponseEntity<String> userVerification(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException {
+      String userVerificationCode = body.get("verificationCode");
+      String actualCode = currUser.getVerificationCode();
+      String key = currUser.getSecretKey();
+      String decryptedCode = "";
+      try {
+         decryptedCode = Security.decrypt(actualCode, key);
+      } catch (Exception e) {
+         System.out.println(e.getMessage());
+      }
+      if (decryptedCode.equals(userVerificationCode)) {
+         userRepository.save(currUser);
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("verified");
+      } else {
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong verification code");
+      }
+   }  
+
 
    @PostMapping("/optional")
    public ResponseEntity<String> addOptional(@RequestBody Map<String, String> body)
@@ -117,6 +137,21 @@ public class APIController {
    @GetMapping("/getAllAddresses/{id}")
    public Address getAddress(@PathVariable int id){
       return addressService.getAddress(id);
+   }
+
+   public String generateVerificationCode() {
+      int leftLimit = 48; // numeral '0'
+      int rightLimit = 122; // letter 'z'
+      int targetStringLength = 5;
+      Random random = new Random();
+  
+      String generatedString = random.ints(leftLimit, rightLimit + 1)
+        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+        .limit(targetStringLength)
+        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+        .toString();
+
+      return generatedString;
    }
    
 }
