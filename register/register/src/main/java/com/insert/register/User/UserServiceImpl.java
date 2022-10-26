@@ -40,12 +40,7 @@ public class UserServiceImpl implements UserService {
 
         String verificationCode = user.getVerificationCode();
         String key = user.getSecretKey();
-        String decryptedCode = "";
-        try {
-           decryptedCode = Security.decrypt(verificationCode, key);
-        } catch (Exception e) {
-           System.out.println(e.getMessage());
-        }
+        String decryptedCode = Security.decrypt(verificationCode, key);
         String url = "http://localhost:3000/email-verification";
         String subject = "Please verify your registration";
         String senderName = "Fandangotothepolls Team";

@@ -2,49 +2,33 @@ package com.insert.register.Security;
 
 import java.util.Random;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
 public class Security {
 
-    public static String encrypt(String strClearText, String secretKey) throws Exception {
-        String encrpytedData = "";
-
-        try {
-            SecretKeySpec skeyspec = new SecretKeySpec(secretKey.getBytes(),"Blowfish");
-            Cipher cipher = Cipher.getInstance("Blowfish");
-            cipher.init(Cipher.ENCRYPT_MODE, skeyspec);
-            byte[] encrypted=cipher.doFinal(strClearText.getBytes());
-            encrpytedData = new String(encrypted);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception(e);
-        }
-        return encrpytedData;
+    public static String encrypt(String strClearText, String secretKey) {
+        String encryptedData = "";
+        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+        encryptor.setPassword(secretKey);
+        encryptedData = encryptor.encrypt(strClearText);
+       
+        return encryptedData;
     }
 
-    public static String decrypt(String encryptedData, String secretKey) throws Exception {
+    public static String decrypt(String encryptedData, String secretKey) {
         String decryptedData = "";
 
-        try {
-            SecretKeySpec skeyspec=new SecretKeySpec(secretKey.getBytes(),"Blowfish");
-            Cipher cipher=Cipher.getInstance("Blowfish");
-            cipher.init(Cipher.DECRYPT_MODE, skeyspec);
-            byte[] decrypted=cipher.doFinal(encryptedData.getBytes());
-            decryptedData = new String(decrypted);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception(e);
-        }
+        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+        encryptor.setPassword(secretKey);
+        decryptedData = encryptor.decrypt(encryptedData);
+       
         return decryptedData;
     }
 
     public static String generateSecretKey() {
         int leftLimit = 48; // numeral '0'
         int rightLimit = 122; // letter 'z'
-        int targetStringLength = 32;
+        int targetStringLength = 16;
         Random random = new Random();
     
         String generatedString = random.ints(leftLimit, rightLimit + 1)

@@ -73,14 +73,8 @@ public class APIController {
       }
       String verificationCode = generateVerificationCode();
       String key = Security.generateSecretKey();
-      String encryptedPass = "";
-      String encryptedCode = "";
-      try {
-         encryptedPass = Security.encrypt(userPassword, key);
-         encryptedCode = Security.encrypt(verificationCode, key);
-      } catch (Exception e) {
-         System.out.println(e.getMessage());
-      }
+      String encryptedPass = Security.encrypt(userPassword, key);
+      String encryptedCode = Security.encrypt(verificationCode, key);
       currUser = new User(firstName, lastName, userPhonenumber, userEmail, encryptedPass ,"Active", promotions, encryptedCode, key);
       userService.sendVerificationEmail(currUser);
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("New user created");
@@ -91,12 +85,7 @@ public class APIController {
       String userVerificationCode = body.get("verificationCode");
       String actualCode = currUser.getVerificationCode();
       String key = currUser.getSecretKey();
-      String decryptedCode = "";
-      try {
-         decryptedCode = Security.decrypt(actualCode, key);
-      } catch (Exception e) {
-         System.out.println(e.getMessage());
-      }
+      String decryptedCode = Security.decrypt(actualCode, key);
       if (decryptedCode.equals(userVerificationCode)) {
          userRepository.save(currUser);
          return ResponseEntity.status(HttpStatus.ACCEPTED).body("verified");
