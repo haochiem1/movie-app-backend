@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -113,8 +114,9 @@ public class APIController {
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("New user created");
    }
 
+   @Transactional
    @PostMapping("/update/address")
-   public Address updateAddress(@RequestBody Map<String, String> body)
+   public void updateAddress(@RequestBody Map<String, String> body)
    {
       int id = Integer.parseInt(body.get("id"));
       String street = body.get("street");
@@ -122,7 +124,30 @@ public class APIController {
       String city = body.get("city");
       String state = body.get("state");
       String zipcode = body.get("zipCode");
-      return addressService.updateAddress(id, street, aptNum, city, state, zipcode);
+ 
+      addressService.updateAddress(id, street, aptNum, city, state, zipcode);
+   }
+
+   @Transactional
+   @PostMapping("/update/name")
+   public void updateName(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("id"));
+      String firstName = body.get("firstName");
+      String lastName = body.get("lastName");
+
+      userService.updateName(id, firstName, lastName);
+   }
+
+   @Transactional
+   @PostMapping("/update/phone-number")
+   public void updatePhone(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("id"));
+      String phoneNumber = body.get("phoneNumber");
+      System.out.println(phoneNumber);
+
+      userService.updatePhone(id, phoneNumber);
    }
 
    @GetMapping("/getAll")

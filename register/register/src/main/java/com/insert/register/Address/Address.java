@@ -5,7 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Entity
+@Transactional
 @Table(name = "useraddress")
 public class Address {
 

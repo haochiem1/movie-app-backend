@@ -1,9 +1,13 @@
 package com.insert.register.Address;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin(origins = "*")
 @Service
 public class AddressServiceImpl implements AddressService {
     
@@ -25,10 +29,12 @@ public class AddressServiceImpl implements AddressService {
         return getAllAddresses().stream().filter(a -> a.getAddressID().equals(id)).findFirst().get();
     }
 
+    @Transactional
     @Override
     public Address updateAddress(int id, String street, String aptNum, String city, String state, String zipcode)
     {
         Address address = getAllAddresses().stream().filter(a -> a.getAddressID().equals(id)).findFirst().get();
+
         address.setStreet(street);
         address.setAptNum(aptNum);
         address.setCity(city);

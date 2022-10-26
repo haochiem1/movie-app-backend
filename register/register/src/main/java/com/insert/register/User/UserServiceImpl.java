@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -60,5 +61,26 @@ public class UserServiceImpl implements UserService {
         mailSender.send(message);
      }
 
+     @Transactional
+     @Override
+     public User updateName(int id, String firstName, String lastName)
+     {
+         User user = getAllUsers().stream().filter(a -> a.getId().equals(id)).findFirst().get();
+ 
+         user.setFirstName(firstName);
+         user.setLastName(lastName);
+         
+         return userRepository.save(user);
+     }
+
+     @Transactional
+     @Override
+     public User updatePhone(int id, String phoneNumber)
+     {
+         User user = getAllUsers().stream().filter(a -> a.getId().equals(id)).findFirst().get();
+ 
+         user.setPhoneNumber(phoneNumber);
+         return userRepository.save(user);
+     }
 
 }

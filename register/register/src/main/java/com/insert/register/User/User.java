@@ -108,6 +108,14 @@ public class User {
         this.verificationCode = verificationCode;
     }
 
+    public void setPromotion (String promotion) {
+        if (promotion.equals("true")) {
+            this.promotion = registeredPromotion.Yes;
+        } else {
+            this.promotion = registeredPromotion.No;
+        }
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -138,5 +146,9 @@ public class User {
 
     public Integer getId() {
         return userID;
+    }
+
+    public registeredPromotion getPromotion() {
+        return promotion;
     }
 }
