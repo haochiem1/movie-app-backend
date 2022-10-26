@@ -74,14 +74,14 @@ public class APIController {
       String verificationCode = generateVerificationCode();
       String key = Security.generateSecretKey();
       String encryptedPass = "";
-      // String encryptedCode = "";
+      String encryptedCode = "";
       try {
          encryptedPass = Security.encrypt(userPassword, key);
-         // encryptedCode = Security.encrypt(verificationCode, key);
+         encryptedCode = Security.encrypt(verificationCode, key);
       } catch (Exception e) {
          System.out.println(e.getMessage());
       }
-      currUser = new User(firstName, lastName, userPhonenumber, userEmail, encryptedPass ,"Active", promotions, verificationCode, key);
+      currUser = new User(firstName, lastName, userPhonenumber, userEmail, encryptedPass ,"Active", promotions, encryptedCode, key);
       userService.sendVerificationEmail(currUser);
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("New user created");
    }
@@ -92,12 +92,12 @@ public class APIController {
       String actualCode = currUser.getVerificationCode();
       String key = currUser.getSecretKey();
       String decryptedCode = "";
-      // try {
-      //    decryptedCode = Security.decrypt(actualCode, key);
-      // } catch (Exception e) {
-      //    System.out.println(e.getMessage());
-      // }
-      if (actualCode.equals(userVerificationCode)) {
+      try {
+         decryptedCode = Security.decrypt(actualCode, key);
+      } catch (Exception e) {
+         System.out.println(e.getMessage());
+      }
+      if (decryptedCode.equals(userVerificationCode)) {
          userRepository.save(currUser);
          return ResponseEntity.status(HttpStatus.ACCEPTED).body("verified");
       } else {
@@ -124,6 +124,18 @@ public class APIController {
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("New user created");
    }
 
+   @PostMapping("/update/address")
+   public Address updateAddress(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("id"));
+      String street = body.get("street");
+      String aptNum = body.get("aptNum");
+      String city = body.get("city");
+      String state = body.get("state");
+      String zipcode = body.get("zipCode");
+      return addressService.updateAddress(id, street, aptNum, city, state, zipcode);
+   }
+
    @GetMapping("/getAll")
    public List<User> getAllUsers(){
       return userService.getAllUsers();
@@ -139,23 +151,10 @@ public class APIController {
       return addressService.getAddress(id);
    }
 
-   @PostMapping("/update/address")
-   public Address updateAddress(@RequestBody Map<String, String> body)
-   {
-      int id = Integer.parseInt(body.get("id"));
-      String street = body.get("street");
-      String aptNum = body.get("aptNum");
-      String city = body.get("city");
-      String state = body.get("state");
-      String zipcode = body.get("zipCode");
-      return addressService.updateAddress(id, street, aptNum, city, state, zipcode);
-   }
-
-
    public String generateVerificationCode() {
       int leftLimit = 48; // numeral '0'
       int rightLimit = 122; // letter 'z'
-      int targetStringLength = 8;
+      int targetStringLength = 5;
       Random random = new Random();
   
       String generatedString = random.ints(leftLimit, rightLimit + 1)

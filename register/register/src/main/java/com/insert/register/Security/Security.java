@@ -11,8 +11,8 @@ public class Security {
         String encrpytedData = "";
 
         try {
-            SecretKeySpec skeyspec = new SecretKeySpec(secretKey.getBytes(),"AES");
-            Cipher cipher = Cipher.getInstance("AES");
+            SecretKeySpec skeyspec = new SecretKeySpec(secretKey.getBytes(),"Blowfish");
+            Cipher cipher = Cipher.getInstance("Blowfish");
             cipher.init(Cipher.ENCRYPT_MODE, skeyspec);
             byte[] encrypted=cipher.doFinal(strClearText.getBytes());
             encrpytedData = new String(encrypted);
@@ -28,8 +28,8 @@ public class Security {
         String decryptedData = "";
 
         try {
-            SecretKeySpec skeyspec=new SecretKeySpec(secretKey.getBytes(),"AES");
-            Cipher cipher=Cipher.getInstance("AES");
+            SecretKeySpec skeyspec=new SecretKeySpec(secretKey.getBytes(),"Blowfish");
+            Cipher cipher=Cipher.getInstance("Blowfish");
             cipher.init(Cipher.DECRYPT_MODE, skeyspec);
             byte[] decrypted=cipher.doFinal(encryptedData.getBytes());
             decryptedData = new String(decrypted);
@@ -44,7 +44,7 @@ public class Security {
     public static String generateSecretKey() {
         int leftLimit = 48; // numeral '0'
         int rightLimit = 122; // letter 'z'
-        int targetStringLength = 16;
+        int targetStringLength = 32;
         Random random = new Random();
     
         String generatedString = random.ints(leftLimit, rightLimit + 1)
