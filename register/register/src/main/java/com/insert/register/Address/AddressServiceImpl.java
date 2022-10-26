@@ -24,4 +24,16 @@ public class AddressServiceImpl implements AddressService {
     public Address getAddress(int id){
         return getAllAddresses().stream().filter(a -> a.getAddressID().equals(id)).findFirst().get();
     }
+
+    @Override
+    public Address updateAddress(int id, String street, String aptNum, String city, String state, String zipcode)
+    {
+        Address address = getAllAddresses().stream().filter(a -> a.getAddressID().equals(id)).findFirst().get();
+        address.setStreet(street);
+        address.setAptNum(aptNum);
+        address.setCity(city);
+        address.setState(state);
+        address.setZipCode(zipcode);
+        return addressRepository.save(address);
+    }
 }
