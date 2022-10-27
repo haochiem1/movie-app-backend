@@ -15,4 +15,6 @@ public interface UserService {
     public User updateName(int id, String firstName, String lastName);
     public User updatePhone(int id, String phoneNumber);
     public User updateRegPromotion(int id, String registeredPromotion);
+    public boolean checkPassword(int id, String password);
+    public User updatePassword(int id, String password);
 }

@@ -95,4 +95,25 @@ public class UserServiceImpl implements UserService {
          return userRepository.save(user);
      }
 
+     @Transactional
+     @Override
+     public boolean checkPassword(int id, String password)
+     {
+        User user = getAllUsers().stream().filter(a -> a.getId().equals(id)).findFirst().get();
+
+        String decrypted = Security.decrypt(user.getPassword(), user.getSecretKey());
+        System.out.println(decrypted);
+        return decrypted.equals(password);
+     }
+
+     @Transactional
+     @Override
+     public User updatePassword(int id, String password)
+     {
+        User user = getAllUsers().stream().filter(a -> a.getId().equals(id)).findFirst().get();
+        String encrypted = Security.encrypt(password, user.getSecretKey());
+        user.setPassword(encrypted);
+        return userRepository.save(user);
+     }
+
 }

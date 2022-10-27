@@ -151,6 +151,16 @@ public class APIController {
    }
 
    @Transactional
+   @PostMapping("/update/password")
+   public void updatePassword(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("id"));
+      String password = body.get("password");
+
+      userService.updatePassword(id, password);
+   }
+
+   @Transactional
    @PostMapping("/update/registered-promotion")
    public void updateRegPromotion(@RequestBody Map<String, String> body)
    {
@@ -159,6 +169,18 @@ public class APIController {
       System.out.println(registeredPromotion);
 
       userService.updateRegPromotion(id, registeredPromotion);
+   }
+
+   @Transactional
+   @PostMapping("/check/password")
+   public ResponseEntity<Boolean> checkPassword(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("id"));
+      String password = body.get("password");
+
+      boolean isCorrect = userService.checkPassword(id, password);
+
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body(isCorrect);
    }
 
    @GetMapping("/getAll")
