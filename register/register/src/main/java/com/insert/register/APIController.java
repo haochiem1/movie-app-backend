@@ -104,12 +104,12 @@ public class APIController {
       String city = body.get("city");
       String state = body.get("state");
       String zipcode = body.get("zipcode");
-      String cardNumber = body.get("cardNumber");
-      String cardName = body.get("cardName");
-      String expMonth = body.get("expMonth");
-      String expYear = body.get("expYear");
-      String billZip = body.get("billZip");
-      cardRepository.save(new Card(currUser.getId(), cardNumber, cardName, expMonth, expYear, billZip));
+      String cardNumber1 = body.get("cardNumber");
+      String cardName1 = body.get("cardName");
+      String expMonth1 = body.get("expMonth");
+      String expYear1 = body.get("expYear");
+      String billZip1 = body.get("billZip");
+      cardRepository.save(new Card(currUser.getId(), cardNumber1, cardName1, expMonth1, expYear1, billZip1, null, null, null, null, null, null, null, null, null, null));
       addressRepository.save(new Address(currUser.getId(), street, aptNum, city, state, zipcode));
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("New user created");
    }
