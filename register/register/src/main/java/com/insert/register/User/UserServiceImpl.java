@@ -83,4 +83,16 @@ public class UserServiceImpl implements UserService {
          return userRepository.save(user);
      }
 
+     @Transactional
+     @Override
+     public User updateRegPromotion(int id, String registeredPromotion)
+     {
+         User user = getAllUsers().stream().filter(a -> a.getId().equals(id)).findFirst().get();
+         System.out.println(user.getPromotion());
+
+         user.setPromotion(registeredPromotion);
+         System.out.println(user.getPromotion());
+         return userRepository.save(user);
+     }
+
 }

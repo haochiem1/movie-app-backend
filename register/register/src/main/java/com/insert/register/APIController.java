@@ -150,6 +150,17 @@ public class APIController {
       userService.updatePhone(id, phoneNumber);
    }
 
+   @Transactional
+   @PostMapping("/update/registered-promotion")
+   public void updateRegPromotion(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("id"));
+      String registeredPromotion = body.get("registeredPromotion");
+      System.out.println(registeredPromotion);
+
+      userService.updateRegPromotion(id, registeredPromotion);
+   }
+
    @GetMapping("/getAll")
    public List<User> getAllUsers(){
       return userService.getAllUsers();
