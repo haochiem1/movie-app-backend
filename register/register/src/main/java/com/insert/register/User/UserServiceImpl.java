@@ -108,6 +108,19 @@ public class UserServiceImpl implements UserService {
 
      @Transactional
      @Override
+     public User checkLogin(String email, String password)
+     {
+        User user = getAllUsers().stream().filter(a -> a.getEmail().equals(email)).findFirst().get();
+
+        String decrypted = Security.decrypt(user.getPassword(), user.getSecretKey());
+        if (decrypted.equals(password)) {
+            return user;
+        }
+        return null;
+     }
+
+     @Transactional
+     @Override
      public User updatePassword(int id, String password)
      {
         User user = getAllUsers().stream().filter(a -> a.getId().equals(id)).findFirst().get();

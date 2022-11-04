@@ -183,6 +183,20 @@ public class APIController {
       return ResponseEntity.status(HttpStatus.ACCEPTED).body(isCorrect);
    }
 
+   @Transactional
+   @PostMapping("/check/login")
+   public Integer checkLogin(@RequestBody Map<String, String> body)
+   {
+      String email = body.get("email");
+      String password = body.get("password");
+
+      User user = userService.checkLogin(email, password);
+      if (user == null) {
+         return -1;
+      }
+      return user.getId();
+   }
+
    @GetMapping("/getAll")
    public List<User> getAllUsers(){
       return userService.getAllUsers();

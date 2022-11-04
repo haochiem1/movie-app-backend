@@ -17,4 +17,6 @@ public interface UserService {
     public User updateRegPromotion(int id, String registeredPromotion);
     public boolean checkPassword(int id, String password);
     public User updatePassword(int id, String password);
+    public User checkLogin(String email, String password);
+
 }
