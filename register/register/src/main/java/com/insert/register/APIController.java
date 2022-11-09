@@ -67,8 +67,8 @@ public class APIController {
       if (userPhonenumber.length() != 10) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please enter a valid phone number");
       }
-      String sql = "SELECT userID FROM userinfo WHERE userEmail = '" + userEmail + "'";
-      List<String> ids = jdbcTemplate.queryForList(sql, String.class);
+      String sql = "SELECT userID FROM userinfo WHERE userEmail = ?";
+      List<String> ids = jdbcTemplate.queryForList(sql, String.class, new Object[]{userEmail});
       if (ids.size() == 1) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An account with that email already exists");
       }
@@ -94,6 +94,20 @@ public class APIController {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong verification code");
       }
    }  
+
+   @PostMapping("/changePassword")
+   public ResponseEntity<String> changePassword(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException {
+      String inputEmail = body.get("email");
+      String sql = "SELECT userID FROM userinfo WHERE userEmail = ?";
+      List<String> account = jdbcTemplate.queryForList(sql, String.class, new Object[]{inputEmail});
+      if (account.size() == 1) {
+         int id = Integer.parseInt(account.get(0));
+         userService.changePasswordEmail(id, inputEmail);
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Password Changed");
+      } else {
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account with that email does not exist");
+      }
+   } 
 
 
    @PostMapping("/optional")
@@ -173,14 +187,21 @@ public class APIController {
 
    @Transactional
    @PostMapping("/check/password")
-   public ResponseEntity<Boolean> checkPassword(@RequestBody Map<String, String> body)
+   public ResponseEntity<String> checkPassword(@RequestBody Map<String, String> body)
    {
       int id = Integer.parseInt(body.get("id"));
       String password = body.get("password");
-
+      String newPassword = body.get("newPassword");
+      System.out.println("Password: " + password);
+      System.out.println("New Password: " + newPassword);
       boolean isCorrect = userService.checkPassword(id, password);
-
-      return ResponseEntity.status(HttpStatus.ACCEPTED).body(isCorrect);
+      System.out.println("Bool: " + isCorrect);
+      if (isCorrect) {
+         userService.updatePassword(id, newPassword);
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Password Changed");
+      } else {
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User with that password does not exist");
+      }
    }
 
    @Transactional

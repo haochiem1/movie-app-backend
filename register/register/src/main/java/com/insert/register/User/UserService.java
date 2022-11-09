@@ -18,5 +18,6 @@ public interface UserService {
     public boolean checkPassword(int id, String password);
     public User updatePassword(int id, String password);
     public User checkLogin(String email, String password);
+    public void changePasswordEmail(int id, String email) throws UnsupportedEncodingException, MessagingException;
 
 }

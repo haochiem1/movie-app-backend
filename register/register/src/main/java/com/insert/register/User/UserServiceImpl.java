@@ -61,6 +61,27 @@ public class UserServiceImpl implements UserService {
         mailSender.send(message);
      }
 
+     public void changePasswordEmail(int id, String email) throws UnsupportedEncodingException, MessagingException {
+        User user = getUser(id);
+        String url = "http://localhost:3000/change-password/" + id;
+        String subject = "Change Password";
+        String senderName = "Fandangotothepolls Team";
+        String mailContent = "<P>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
+        mailContent += "<p>Please follow this link to change your password...</p>"; 
+        mailContent += "<h3><a href=\"" + url + "\">CHANGE PASSWORD</a></h3>";
+        mailContent += "<p>The Fandangotothepolls Team</p>";
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom("Fandangotothepolls@gmail.com", senderName);
+        helper.setTo(user.getEmail());
+        helper.setSubject(subject);
+
+        helper.setText(mailContent, true);
+
+        mailSender.send(message);
+     }
+
      @Transactional
      @Override
      public User updateName(int id, String firstName, String lastName)
