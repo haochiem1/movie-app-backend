@@ -95,8 +95,8 @@ public class APIController {
       }
    }  
 
-   @PostMapping("/changePassword")
-   public ResponseEntity<String> changePassword(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException {
+   @PostMapping("/emailPassword")
+   public ResponseEntity<String> emailPassword(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException {
       String inputEmail = body.get("email");
       String sql = "SELECT userID FROM userinfo WHERE userEmail = ?";
       List<String> account = jdbcTemplate.queryForList(sql, String.class, new Object[]{inputEmail});
@@ -107,7 +107,15 @@ public class APIController {
       } else {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account with that email does not exist");
       }
-   } 
+   }
+   
+   @PostMapping("/changePassword")
+   public ResponseEntity<String> changePassword(@RequestBody Map<String, String> body) {
+      String id = body.get("id");
+      String newPassword = body.get("password1");
+      userService.updatePassword(Integer.parseInt(id), newPassword);
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body("Password Changed");
+   }
 
 
    @PostMapping("/optional")
@@ -192,15 +200,12 @@ public class APIController {
       int id = Integer.parseInt(body.get("id"));
       String password = body.get("password");
       String newPassword = body.get("newPassword");
-      System.out.println("Password: " + password);
-      System.out.println("New Password: " + newPassword);
       boolean isCorrect = userService.checkPassword(id, password);
-      System.out.println("Bool: " + isCorrect);
       if (isCorrect) {
          userService.updatePassword(id, newPassword);
-         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Password Changed");
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("1"); // passwords match and was updated
       } else {
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User with that password does not exist");
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("2"); //password does not match
       }
    }
 

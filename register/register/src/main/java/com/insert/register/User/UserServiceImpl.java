@@ -123,7 +123,6 @@ public class UserServiceImpl implements UserService {
         User user = getAllUsers().stream().filter(a -> a.getId().equals(id)).findFirst().get();
 
         String decrypted = Security.decrypt(user.getPassword(), user.getSecretKey());
-        System.out.println(decrypted);
         return decrypted.equals(password);
      }
 
