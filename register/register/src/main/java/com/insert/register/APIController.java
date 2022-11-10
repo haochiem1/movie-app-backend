@@ -1,6 +1,7 @@
 package com.insert.register;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @Component
 @RestController
@@ -63,7 +65,7 @@ public class APIController {
       String userPhonenumber = body.get("phoneNumber");
       String userEmail = body.get("userEmail");
       String userPassword = body.get("userPassword");
-      String promotions = body.get("promotions");
+      Integer promotions = Integer.parseInt(body.get("promotions"));
       if (userPhonenumber.length() != 10) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please enter a valid phone number");
       }
@@ -187,7 +189,7 @@ public class APIController {
    public void updateRegPromotion(@RequestBody Map<String, String> body)
    {
       int id = Integer.parseInt(body.get("id"));
-      String registeredPromotion = body.get("registeredPromotion");
+      int registeredPromotion = Integer.parseInt(body.get("registeredPromotion"));
       System.out.println(registeredPromotion);
 
       userService.updateRegPromotion(id, registeredPromotion);
@@ -211,16 +213,21 @@ public class APIController {
 
    @Transactional
    @PostMapping("/check/login")
-   public Integer checkLogin(@RequestBody Map<String, String> body)
+   public List<Integer> checkLogin(@RequestBody Map<String, String> body)
    {
-      String email = body.get("email");
-      String password = body.get("password");
+      String email = body.get("userEmail");
+      String password = body.get("userPassword");
 
       User user = userService.checkLogin(email, password);
+      List<Integer> userInfo = new ArrayList<>();
       if (user == null) {
-         return -1;
+         userInfo.add(-1);
+         userInfo.add(-1);
+      } else {
+         userInfo.add(user.getId());
+         userInfo.add(user.getPromotion());
       }
-      return user.getId();
+      return userInfo;
    }
 
    @GetMapping("/getAll")

@@ -9,10 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-enum registeredPromotion {
-    Yes,
-    No;
-}
 
 enum currentState {
     Active,
@@ -43,9 +39,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private currentState state;
 
-    @Column(name="registeredPromotion", columnDefinition = "ENUM('Yes', 'No')")
-    @Enumerated(EnumType.STRING)
-    private registeredPromotion promotion;
+    @Column(name="registeredPromotion")
+    private Integer promotion;
 
     @Column(name ="verificationCode")
     private String verificationCode;
@@ -54,23 +49,19 @@ public class User {
     private String secretKey;
 
 
-    public User(String firstname, String lastname, String phoneNumber, String email, String password, String state, String promotion, String verificationCode, String secretKey) {
+    public User(String firstname, String lastname, String phoneNumber, String email, String password, String state, Integer promotion, String verificationCode, String secretKey) {
         this.firstName = firstname;
         this.lastName = lastname;
         this.phoneNumber = phoneNumber;
         this.userEmail = email;
         this.userPassword = password;
+        this.promotion = promotion;
         if (state.equals("Active")) {
             this.state = currentState.Active;
         } else if (state.equals("Inactive")) {
             this.state = currentState.Inactive;
         } else {
             this.state = currentState.Suspended;
-        }
-        if (promotion.equals("true")) {
-            this.promotion = registeredPromotion.Yes;
-        } else {
-            this.promotion = registeredPromotion.No;
         }
         this.verificationCode = verificationCode;
         this.secretKey = secretKey;
@@ -108,12 +99,8 @@ public class User {
         this.verificationCode = verificationCode;
     }
 
-    public void setPromotion (String promotion) {
-        if (promotion.equals("true")) {
-            this.promotion = registeredPromotion.Yes;
-        } else {
-            this.promotion = registeredPromotion.No;
-        }
+    public void setPromotion (Integer promotion) {
+        this.promotion = promotion;
     }
 
     public String getFirstName() {
@@ -148,7 +135,7 @@ public class User {
         return userID;
     }
 
-    public registeredPromotion getPromotion() {
+    public Integer getPromotion() {
         return promotion;
     }
 }

@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
 
      @Transactional
      @Override
-     public User updateRegPromotion(int id, String registeredPromotion)
+     public User updateRegPromotion(int id, Integer registeredPromotion)
      {
          User user = getAllUsers().stream().filter(a -> a.getId().equals(id)).findFirst().get();
          System.out.println(user.getPromotion());
@@ -131,8 +131,9 @@ public class UserServiceImpl implements UserService {
      public User checkLogin(String email, String password)
      {
         User user = getAllUsers().stream().filter(a -> a.getEmail().equals(email)).findFirst().get();
-
+        
         String decrypted = Security.decrypt(user.getPassword(), user.getSecretKey());
+
         if (decrypted.equals(password)) {
             return user;
         }
