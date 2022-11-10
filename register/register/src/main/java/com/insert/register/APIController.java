@@ -65,7 +65,10 @@ public class APIController {
       String userPhonenumber = body.get("phoneNumber");
       String userEmail = body.get("userEmail");
       String userPassword = body.get("userPassword");
-      Integer promotions = Integer.parseInt(body.get("promotions"));
+      Integer promotions = 1;
+      if (body.get("promotions").equals("false")) {
+         promotions = 0;
+      }
       if (userPhonenumber.length() != 10) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please enter a valid phone number");
       }
@@ -226,7 +229,6 @@ public class APIController {
       } else {
          userInfo.add(user.getId());
          userInfo.add(user.getPromotion());
-         userInfo.add(user.getIsAdmin());
       }
       return userInfo;
    }
