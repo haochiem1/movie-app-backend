@@ -78,7 +78,8 @@ public class APIController {
       String key = Security.generateSecretKey();
       String encryptedPass = Security.encrypt(userPassword, key);
       String encryptedCode = Security.encrypt(verificationCode, key);
-      currUser = new User(firstName, lastName, userPhonenumber, userEmail, encryptedPass ,"Active", promotions, encryptedCode, key);
+      Integer isAdmin = 0;
+      currUser = new User(firstName, lastName, userPhonenumber, userEmail, encryptedPass ,"Active", promotions, encryptedCode, key, isAdmin);
       userService.sendVerificationEmail(currUser);
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("New user created");
    }
@@ -222,10 +223,10 @@ public class APIController {
       List<Integer> userInfo = new ArrayList<>();
       if (user == null) {
          userInfo.add(-1);
-         userInfo.add(-1);
       } else {
          userInfo.add(user.getId());
          userInfo.add(user.getPromotion());
+         userInfo.add(user.getIsAdmin());
       }
       return userInfo;
    }

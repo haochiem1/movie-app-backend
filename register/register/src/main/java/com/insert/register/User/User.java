@@ -48,8 +48,11 @@ public class User {
     @Column(name = "secretKey")
     private String secretKey;
 
+    @Column(name = "isAdmin")
+    private Integer isAdmin;
 
-    public User(String firstname, String lastname, String phoneNumber, String email, String password, String state, Integer promotion, String verificationCode, String secretKey) {
+
+    public User(String firstname, String lastname, String phoneNumber, String email, String password, String state, Integer promotion, String verificationCode, String secretKey, Integer isAdmin) {
         this.firstName = firstname;
         this.lastName = lastname;
         this.phoneNumber = phoneNumber;
@@ -65,6 +68,7 @@ public class User {
         }
         this.verificationCode = verificationCode;
         this.secretKey = secretKey;
+        this.isAdmin = isAdmin;
     }
 
     public User()
@@ -103,6 +107,10 @@ public class User {
         this.promotion = promotion;
     }
 
+    public void setIsAdmin (Integer isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -137,5 +145,9 @@ public class User {
 
     public Integer getPromotion() {
         return promotion;
+    }
+
+    public Integer getIsAdmin() {
+        return isAdmin;
     }
 }
