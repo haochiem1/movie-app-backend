@@ -1,5 +1,6 @@
 package com.insert.register;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -70,12 +71,12 @@ public class APIController {
          promotions = 0;
       }
       if (userPhonenumber.length() != 10) {
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please enter a valid phone number");
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("1"); // not a valid phone number
       }
       String sql = "SELECT userID FROM userinfo WHERE userEmail = ?";
       List<String> ids = jdbcTemplate.queryForList(sql, String.class, new Object[]{userEmail});
       if (ids.size() == 1) {
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An account with that email already exists");
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("2"); // an account with that email already exists
       }
       String verificationCode = generateVerificationCode();
       String key = Security.generateSecretKey();
@@ -84,7 +85,7 @@ public class APIController {
       Integer isAdmin = 0;
       currUser = new User(firstName, lastName, userPhonenumber, userEmail, encryptedPass ,"Active", promotions, encryptedCode, key, isAdmin);
       userService.sendVerificationEmail(currUser);
-      return ResponseEntity.status(HttpStatus.ACCEPTED).body("New user created");
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
    }
 
    @PostMapping("/verification")
@@ -109,18 +110,23 @@ public class APIController {
       if (account.size() == 1) {
          int id = Integer.parseInt(account.get(0));
          userService.changePasswordEmail(id, inputEmail);
-         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Password Changed");
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("1"); // email to change password was sent
       } else {
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account with that email does not exist");
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("2"); // account with that email does not exist
       }
    }
    
    @PostMapping("/changePassword")
-   public ResponseEntity<String> changePassword(@RequestBody Map<String, String> body) {
-      String id = body.get("id");
+   public ResponseEntity<String> changePassword(@RequestBody Map<String, String> body) throws UnsupportedEncodingException {
+      String userEmail = body.get("email");
       String newPassword = body.get("password1");
-      userService.updatePassword(Integer.parseInt(id), newPassword);
-      return ResponseEntity.status(HttpStatus.ACCEPTED).body("Password Changed");
+      String urlDecoded = URLDecoder.decode(userEmail, "UTF-8");
+      String decryptedEmail = Security.decrypt(urlDecoded, "ronaldosuiii");
+      String sql = "SELECT userID FROM userinfo WHERE userEmail = ?";
+      List<String> ids = jdbcTemplate.queryForList(sql, String.class, new Object[]{decryptedEmail});
+      String userID = ids.get(0);
+      userService.updatePassword(Integer.parseInt(userID), newPassword);
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body("1"); // password was changed
    }
 
 

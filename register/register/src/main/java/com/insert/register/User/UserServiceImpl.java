@@ -2,7 +2,9 @@ package com.insert.register.User;
 import com.insert.register.Security.*;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -63,7 +65,10 @@ public class UserServiceImpl implements UserService {
 
      public void changePasswordEmail(int id, String email) throws UnsupportedEncodingException, MessagingException {
         User user = getUser(id);
-        String url = "http://localhost:3000/change-password/" + id;
+        String userEmail = user.getEmail();
+        String encryptedEmail = Security.encrypt(userEmail, "ronaldosuiii");
+        String urlEncoded = URLEncoder.encode(encryptedEmail, "UTF-8");
+        String url = "http://localhost:3000/change-password/" + urlEncoded;
         String subject = "Change Password";
         String senderName = "Fandangotothepolls Team";
         String mailContent = "<P>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
@@ -130,12 +135,15 @@ public class UserServiceImpl implements UserService {
      @Override
      public User checkLogin(String email, String password)
      {
-        User user = getAllUsers().stream().filter(a -> a.getEmail().equals(email)).findFirst().get();
-        
-        String decrypted = Security.decrypt(user.getPassword(), user.getSecretKey());
+        try {
+            User user = getAllUsers().stream().filter(a -> a.getEmail().equals(email)).findFirst().get();
+            String decrypted = Security.decrypt(user.getPassword(), user.getSecretKey());
 
-        if (decrypted.equals(password)) {
-            return user;
+            if (decrypted.equals(password)) {
+                return user;
+            }
+        } catch (NoSuchElementException e) {
+            System.out.println("User not found");
         }
         return null;
      }
