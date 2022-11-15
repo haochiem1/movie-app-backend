@@ -235,6 +235,7 @@ public class APIController {
       } else {
          userInfo.add(user.getId());
          userInfo.add(user.getPromotion());
+         userInfo.add(user.getIsAdmin());
       }
       return userInfo;
    }
