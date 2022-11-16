@@ -12,3 +12,5 @@ public class RegisterApplication {
 	}
 
 }
+
+//(scanBasePackages={"com.insert.register.UserService"})
