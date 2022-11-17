@@ -19,6 +19,9 @@ import com.insert.register.Category.*;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -32,16 +35,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan(basePackages = {"com.insert.register"})
 
 @Component
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/admin")
 @CrossOrigin(origins = "*")
 public class AdminController {
-
-   @Autowired
-	private JdbcTemplate jdbcTemplate;
-
 
    private final MovieCategoryMappingRepository movieCategoryMappingRepository;
    private final MovieRepository movieRepository;
@@ -50,7 +52,7 @@ public class AdminController {
    private Movie currMovie;
    private Category currCat;
    private MovieCategoryMapping currMapping;
-
+   
    public AdminController(MovieCategoryMappingRepository movieCategoryMappingRepository, MovieRepository movieRepository, CategoryRepository categoryRepository) {
       this.movieCategoryMappingRepository = movieCategoryMappingRepository;
       this.movieRepository = movieRepository;
