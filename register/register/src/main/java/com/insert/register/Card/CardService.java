@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service;
 public interface CardService {
     public Card saveCard(Card card);
     public List<Card> getAllCards();
+    public Card getCard(int id);
 }

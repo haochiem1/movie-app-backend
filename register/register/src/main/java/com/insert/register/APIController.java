@@ -46,6 +46,9 @@ public class APIController {
    @Autowired
    private AddressService addressService; 
 
+   @Autowired
+   private CardService cardService;
+
    private final UserRepository userRepository;
    private final CardRepository cardRepository;
    private final AddressRepository addressRepository;
@@ -247,6 +250,12 @@ public class APIController {
    @GetMapping("/getAll/{id}")
    public User getUser(@PathVariable int id){
       return userService.getUser(id);
+   }
+
+   @GetMapping("/getPayment/{id}")
+   public Card getCard(@PathVariable int id){
+      Card card = cardService.getCard(id);
+      return card;
    }
 
    @GetMapping("/getAllAddresses/{id}")
