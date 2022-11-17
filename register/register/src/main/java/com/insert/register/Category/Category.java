@@ -16,8 +16,6 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer categoryID;
 
-    @Column(name="movieID")
-    private Integer movieID;
     @Column(name="action")
     private Integer action;
     @Column(name="adult")
@@ -63,8 +61,7 @@ public class Category {
     @Column(name="western")
     private Integer western;
 
-    public Category(Integer movieID, Integer action, Integer adult, Integer adventure, Integer anime, Integer experimental, Integer children, Integer comedy, Integer comedyDrama, Integer crime, Integer drama, Integer epic, Integer fantasy, Integer historical, Integer horror, Integer musical, Integer mystery, Integer romance, Integer scienceFiction, Integer spy, Integer thriller, Integer war, Integer western) {
-        this.movieID = movieID;
+    public Category(Integer action, Integer adult, Integer adventure, Integer anime, Integer experimental, Integer children, Integer comedy, Integer comedyDrama, Integer crime, Integer drama, Integer epic, Integer fantasy, Integer historical, Integer horror, Integer musical, Integer mystery, Integer romance, Integer scienceFiction, Integer spy, Integer thriller, Integer war, Integer western) {
         this.action = action;
         this.adult = adult;
         this.adventure = adventure;
@@ -94,10 +91,6 @@ public class Category {
     //Setters
     public void setId(Integer id) {
         this.categoryID = id;
-    }
-
-    public void setMovieID(Integer x) {
-        this.movieID = x;
     }
 
     public void setAction(Integer x) {
@@ -186,12 +179,8 @@ public class Category {
 
     //Getters
 
-    public Integer getCategoeyID() {
+    public Integer getCategoryID() {
         return categoryID;
-    }
-
-    public Integer getMovieID() {
-        return movieID;
     }
 
     public Integer getAction() {

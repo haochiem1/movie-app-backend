@@ -1,5 +1,7 @@
 package com.insert.register.Movie;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,8 +18,6 @@ public class Movie {
 
     @Column(name="title")
     private String title;
-    @Column(name="categoryID")
-    private Integer categoryID;
     @Column(name="cast")
     private String cast;
     @Column(name="direct")
@@ -33,11 +33,10 @@ public class Movie {
     @Column(name="reviewsRating")
     private Float reviewsRating;
     @Column(name="releaseDate")
-    private String releaseDate;
+    private Date releaseDate;
 
-    public Movie(String title, Integer categoryID, String cast, String director, String producer, String synopsis, Integer duration, String rating, Float reviewsRating, String releaseDate) {
+    public Movie(String title, String cast, String director, String producer, String synopsis, Integer duration, String rating, Float reviewsRating, Date releaseDate) {
         this.title = title;
-        this.categoryID = categoryID;
         this.cast = cast;
         this.director = director;
         this.producer = producer;
@@ -57,10 +56,6 @@ public class Movie {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void setCategoryID(Integer categoryID) {
-        this.categoryID = categoryID;
     }
 
     public void setCast(String cast) {
@@ -91,7 +86,7 @@ public class Movie {
         this.reviewsRating = reviewsRating;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -102,10 +97,6 @@ public class Movie {
 
     public String getTitle() {
         return title;
-    }
-
-    public Integer getCategoryID() {
-        return categoryID;
     }
 
     public String getCast() {
@@ -136,7 +127,7 @@ public class Movie {
         return reviewsRating;
     }
 
-    public String getReleaseDate() {
+    public Date getReleaseDate() {
         return releaseDate;
     }
 }
