@@ -3,7 +3,6 @@ package com.insert.register;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
 @SpringBootApplication
 public class RegisterApplication {
 
