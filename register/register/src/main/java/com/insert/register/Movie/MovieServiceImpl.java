@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class MovieServiceImpl {
+public class MovieServiceImpl implements MovieService{
     @Autowired
     private MovieRepository movieRepository;
 }

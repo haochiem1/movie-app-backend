@@ -59,7 +59,7 @@ public class AdminController {
       this.categoryRepository = categoryRepository;
    }
 
-   @PostMapping("/add-movie")
+    @PostMapping("/add-movie")
    public ResponseEntity<String> addMovie(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
    {
       String title = body.get("title");
@@ -71,42 +71,69 @@ public class AdminController {
       String rating = body.get("rating");
       Float reviewsRating = Float.parseFloat(body.get("reviewsRating"));
       Date releaseDate = java.sql.Date.valueOf(body.get("releaseDate"));
+      String posterLink = body.get("posterLink");
+      String trailerLink = body.get("trailerLink");
 
-      currMovie = new Movie(title, cast, director, producer, synopsis, duration, rating, reviewsRating, releaseDate);
+
+
+      currMovie = new Movie(title, cast, director, producer, synopsis, duration, rating, reviewsRating, releaseDate, posterLink, trailerLink);
       movieRepository.save(currMovie);
 
-      Integer action = Integer.parseInt(body.get("action"));
-      Integer adult = Integer.parseInt(body.get("adult"));
-      Integer adventure = Integer.parseInt(body.get("adventure"));
-      Integer anime = Integer.parseInt(body.get("anime"));
-      Integer experimental = Integer.parseInt(body.get("experimental"));
-      Integer children = Integer.parseInt(body.get("children"));
-      Integer comedy = Integer.parseInt(body.get("comedy"));
-      Integer comedyDrama = Integer.parseInt(body.get("comedyDrama"));
-      Integer crime = Integer.parseInt(body.get("crime"));
-      Integer drama = Integer.parseInt(body.get("drama"));
-      Integer epic = Integer.parseInt(body.get("epic"));
-      Integer fantasy = Integer.parseInt(body.get("fantasy"));
-      Integer historical = Integer.parseInt(body.get("historical"));
-      Integer horror = Integer.parseInt(body.get("horror"));
-      Integer musical = Integer.parseInt(body.get("musical"));
-      Integer mystery = Integer.parseInt(body.get("mystery"));
-      Integer romance = Integer.parseInt(body.get("romance"));
-      Integer scienceFiction = Integer.parseInt(body.get("scienceFiction"));
-      Integer spy = Integer.parseInt(body.get("spy"));
-      Integer thriller = Integer.parseInt(body.get("thriller"));
-      Integer war = Integer.parseInt(body.get("war"));
-      Integer western = Integer.parseInt(body.get("western"));
+      Integer action = 0;
+      if(body.get("action") == "true") action = 1;
+      Integer adult = 0;
+      if(body.get("adult") == "true") adult = 1;
+      Integer adventure = 0;
+      if(body.get("adventure") == "true") adventure = 1;
+      Integer anime = 0;
+      if(body.get("anime") == "true") anime = 1;
+      Integer experimental = 0;
+      if(body.get("experimental") == "true") experimental = 1;
+      Integer children = 0;
+      if(body.get("children") == "true") children = 1;
+      Integer comedy = 0;
+      if(body.get("comedy") == "true") comedy = 1;
+      Integer comedyDrama = 0;
+      if(body.get("comedyDrama") == "true") comedy = 1;
+      Integer crime = 0;
+      if(body.get("crime") == "true") crime = 1;
+      Integer drama = 0;
+      if(body.get("drama") == "true") drama = 1;
+      Integer epic = 0;
+      if(body.get("epic") == "true") epic = 1;
+      Integer fantasy = 0;
+      if(body.get("fantasy") == "true") fantasy = 1;
+      Integer historical = 0;
+      if(body.get("historical") == "true") historical = 1;
+      Integer horror = 0;
+      if(body.get("horror") == "true") horror = 1;
+      Integer musical = 0;
+      if(body.get("musical") == "true") musical = 1;
+      Integer mystery = 0;
+      if(body.get("mystery") == "true") mystery = 1;
+      Integer romance = 0;
+      if(body.get("romance") == "true") romance = 1;
+      Integer scienceFiction = 0;
+      if(body.get("scienceFiction") == "true") scienceFiction = 1;
+      Integer spy = 0;
+      if(body.get("spy") == "true") spy = 1;
+      Integer thriller = 0;
+      if(body.get("thriller") == "true") thriller = 1;
+      Integer war = 0;
+      if(body.get("war") == "true") war = 1;
+      Integer western = 0;
+      if(body.get("wester") == "true") western = 1;
+      
 
       currCat = new Category(action, adult, adventure, anime, experimental, children, comedy, comedyDrama, crime, drama, epic, fantasy, historical, horror, musical, mystery, romance, scienceFiction, spy, thriller, war, western);
       categoryRepository.save(currCat);
 
-      /*Integer categoryID = currCat.getCategoryID();
+      Integer categoryID = currCat.getCategoryID();
       Integer movieID = currMovie.getMovieID();
       currMapping = new MovieCategoryMapping(movieID, categoryID);
       
       movieCategoryMappingRepository.save(currMapping);
-      */
+      System.out.print("GotIT");
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
    }
 

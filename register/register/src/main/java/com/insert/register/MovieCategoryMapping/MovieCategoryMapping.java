@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Entity
+@Table(name = "movieCategoryMapping")
 public class MovieCategoryMapping {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

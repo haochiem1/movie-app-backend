@@ -11,7 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.apache.logging.log4j.util.TriConsumer;
+
+@Entity
+@Table(name = "movie")
 public class Movie {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer movieID;
@@ -20,7 +25,7 @@ public class Movie {
     private String title;
     @Column(name="cast")
     private String cast;
-    @Column(name="direct")
+    @Column(name="director")
     private String director;
     @Column(name="producer")
     private String producer;
@@ -34,8 +39,12 @@ public class Movie {
     private Float reviewsRating;
     @Column(name="releaseDate")
     private Date releaseDate;
+    @Column(name="posterLink")
+    private String posterLink;
+    @Column(name="trailerLink")
+    private String trailerLink;
 
-    public Movie(String title, String cast, String director, String producer, String synopsis, Integer duration, String rating, Float reviewsRating, Date releaseDate) {
+    public Movie(String title, String cast, String director, String producer, String synopsis, Integer duration, String rating, Float reviewsRating, Date releaseDate,String posterLink,String trailerLink) {
         this.title = title;
         this.cast = cast;
         this.director = director;
@@ -45,6 +54,8 @@ public class Movie {
         this.rating = rating;
         this.releaseDate = releaseDate;
         this.reviewsRating = reviewsRating;
+        this.posterLink = posterLink;
+        this.trailerLink = trailerLink;
     }
 
     public Movie() {}
@@ -80,6 +91,14 @@ public class Movie {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public void setPosterLink(String posterLink) {
+        this.posterLink = posterLink;
+    }
+
+    public void setTrailerLink(String trailerLink) {
+        this.trailerLink = trailerLink;
     }
 
     public void setReviewsRating(Float reviewsRating) {
@@ -129,5 +148,13 @@ public class Movie {
 
     public Date getReleaseDate() {
         return releaseDate;
+    }
+
+    public String getPosterLink() {
+        return posterLink;
+    }
+
+    public String getTrailerLink() {
+        return trailerLink;
     }
 }

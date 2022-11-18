@@ -1,7 +1,5 @@
 package com.insert.register.Category;
 
-import com.insert.register.Security.*;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
@@ -17,8 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CategoryServiceImpl {
+public class CategoryServiceImpl implements CategoryService{
     @Autowired
-    private CategoryRepository movieRepository;
+    private CategoryRepository categoryRepository;
+
+    public Integer saveAddress(int x) {
+        return 1;
+    }
 }
 

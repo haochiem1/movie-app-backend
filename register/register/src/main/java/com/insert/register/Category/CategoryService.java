@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface CategoryService {
-    
+    public Integer saveAddress(int x);
 }
