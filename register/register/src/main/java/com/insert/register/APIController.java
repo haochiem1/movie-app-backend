@@ -52,6 +52,9 @@ public class APIController {
    @Autowired
    private AddressService addressService; 
 
+   @Autowired
+   private CardService cardService; 
+
    private final UserRepository userRepository;
    private final CardRepository cardRepository;
    private final AddressRepository addressRepository;
@@ -169,6 +172,75 @@ public class APIController {
    }
 
    @Transactional
+   @PostMapping("/update/payment1")
+   public void updatePayment1(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("data"));
+      String cardName1 = body.get("cardName1");
+      String cardNumber1 = body.get("cardNumber1");
+      String expMonth1 = body.get("expMonth1");
+      String expYear1 = body.get("expYear1");
+      String billZip1 = body.get("billZip1");
+ 
+      cardService.updatePayment1(id, cardName1, cardNumber1, expMonth1, expYear1, billZip1);
+   }
+
+   @Transactional
+   @PostMapping("/update/payment2")
+   public void updatePayment2(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("data"));
+      String cardName2 = body.get("cardName2");
+      String cardNumber2 = body.get("cardNumber2");
+      String expMonth2 = body.get("expMonth2");
+      String expYear2 = body.get("expYear2");
+      String billZip2 = body.get("billZip2");
+ 
+      cardService.updatePayment2(id, cardName2, cardNumber2, expMonth2, expYear2, billZip2);
+   }
+
+   @Transactional
+   @PostMapping("/update/payment3")
+   public void updatePayment3(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("data"));
+      String cardName3 = body.get("cardName3");
+      String cardNumber3 = body.get("cardNumber3");
+      String expMonth3 = body.get("expMonth3");
+      String expYear3 = body.get("expYear3");
+      String billZip3 = body.get("billZip3");
+ 
+      cardService.updatePayment3(id, cardName3, cardNumber3, expMonth3, expYear3, billZip3);
+   }
+
+   @Transactional
+   @PostMapping("/update/payment-delete1")
+   public void deletePayment1(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("data"));
+ 
+      cardService.deletePayment1(id);
+   }
+
+   @Transactional
+   @PostMapping("/update/payment-delete2")
+   public void deletePayment2(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("data"));
+ 
+      cardService.deletePayment2(id);
+   }
+
+   @Transactional
+   @PostMapping("/update/payment-delete3")
+   public void deletePayment3(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("data"));
+ 
+      cardService.deletePayment3(id);
+   }
+
+   @Transactional
    @PostMapping("/update/name")
    public void updateName(@RequestBody Map<String, String> body)
    {
@@ -255,6 +327,14 @@ public class APIController {
    public User getUser(@PathVariable int id){
       return userService.getUser(id);
    }
+
+   @GetMapping("/getPayment/{id}")
+  public Card getCard(@PathVariable int id){
+     Card card = cardService.getCard(id);
+     System.out.println(card.getExpYear1());
+     return card;
+  }
+
 
    @GetMapping("/getAllAddresses/{id}")
    public Address getAddress(@PathVariable int id){
