@@ -50,4 +50,9 @@ public class MovieServiceImpl implements MovieService{
 
         return searchedRepository;
     }
+
+    public void removeMovie(int id) {
+        Movie movie = getAllMovies().stream().filter(a -> a.getMovieID().equals(id)).findFirst().get();
+        movieRepository.delete(movie);
+    }
 }
