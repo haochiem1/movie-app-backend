@@ -20,4 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class MovieServiceImpl implements MovieService{
     @Autowired
     private MovieRepository movieRepository;
+
+    @Override
+    public List<Movie> getAllMovies(){
+        return movieRepository.findAll();
+    }
+
+    public void removeMovie(int id) {
+        Movie movie = getAllMovies().stream().filter(a -> a.getMovieID().equals(id)).findFirst().get();
+        movieRepository.delete(movie);
+    }
 }

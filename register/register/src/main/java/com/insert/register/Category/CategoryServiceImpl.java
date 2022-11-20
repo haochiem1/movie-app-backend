@@ -19,8 +19,14 @@ public class CategoryServiceImpl implements CategoryService{
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public Integer saveAddress(int x) {
-        return 1;
+    @Override
+    public List<Category> getAllCategories(){
+        return categoryRepository.findAll();
+    }
+
+    public void removeCategory(int id) {
+        Category movie = getAllCategories().stream().filter(a -> a.getCategoryID().equals(id)).findFirst().get();
+        categoryRepository.delete(movie);
     }
 }
 

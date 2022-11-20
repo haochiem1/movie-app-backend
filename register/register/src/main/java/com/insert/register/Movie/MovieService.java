@@ -8,5 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface MovieService {
-    
+    public List<Movie> getAllMovies();
+    public void removeMovie(int id);
 }
