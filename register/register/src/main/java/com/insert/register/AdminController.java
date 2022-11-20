@@ -136,9 +136,6 @@ public class AdminController {
       System.out.print("GotIT");
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
    }
-
-   
-   
 }
 
 

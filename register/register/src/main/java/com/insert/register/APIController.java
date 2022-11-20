@@ -1,6 +1,7 @@
 package com.insert.register;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -13,6 +14,7 @@ import com.insert.register.Card.CardRepository;
 import com.insert.register.User.*;
 import com.insert.register.Card.*;
 import com.insert.register.Address.*;
+import com.insert.register.Movie.*;
 import com.insert.register.Security.*;
 
 
@@ -52,16 +54,21 @@ public class APIController {
    @Autowired
    private AddressService addressService; 
 
+   @Autowired
+   private MovieService movieService; 
+
    private final UserRepository userRepository;
    private final CardRepository cardRepository;
    private final AddressRepository addressRepository;
+   private final MovieRepository movieRepository;
 
    private User currUser;
 
-   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository) {
+   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository) {
       this.userRepository = userRepository;
       this.cardRepository = cardRepository;
       this.addressRepository = addressRepository;
+      this.movieRepository = movieRepository;
    }
 
    @PostMapping("/add")
@@ -249,6 +256,38 @@ public class APIController {
    @GetMapping("/getAll")
    public List<User> getAllUsers(){
       return userService.getAllUsers();
+   }
+
+   @GetMapping("/getAllMovies")
+   public List<Movie> getAllMovies(){
+      return movieService.getAllMovies();
+   }
+
+   @GetMapping("/getSearchedMovies/{query}")
+   public List<Movie> getSearchedMovies(@PathVariable String query){
+      return movieService.getSearchedMovie(query);
+   }
+
+   @GetMapping("/getAllCurrentMoviesHome")
+   public List<Movie> getAllCurrentMoviesHome(){
+      LocalDate date = LocalDate.now();
+      List<Movie> currentMovies =  movieRepository.findByStartBefore(date);
+      if(currentMovies.size() > 5)
+      {
+         currentMovies = currentMovies.subList(0, 5);
+      }
+      return currentMovies;
+   }
+   
+   @GetMapping("/getAllUpcomingMoviesHome")
+   public List<Movie> getAllUpcomingMoviesHome(){
+      LocalDate date = LocalDate.now();
+      List<Movie> currentMovies =  movieRepository.findByStartAfter(date);
+      if(currentMovies.size() > 5)
+      {
+      currentMovies = currentMovies.subList(0, 5);
+      }
+      return currentMovies;
    }
 
    @GetMapping("/getAll/{id}")
