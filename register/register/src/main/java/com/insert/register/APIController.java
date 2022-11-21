@@ -388,7 +388,9 @@ public class APIController {
          for (Movie movie: currentMovies) {
             if (doesMovieHasCategory(movie, query) == 1) {
             searchedRepository.add(movie);
-            }
+            } else if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
+               searchedRepository.add(movie);
+           }
          }
          return searchedRepository;
       }
@@ -403,7 +405,9 @@ public class APIController {
          for (Movie movie: upcomingMovies) {
             if (doesMovieHasCategory(movie, query) == 1) {
             searchedRepository.add(movie);
-            }
+            } else if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
+               searchedRepository.add(movie);
+           }
          }
          return searchedRepository;
       }
