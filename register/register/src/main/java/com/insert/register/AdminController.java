@@ -4,6 +4,7 @@ import java.net.URLDecoder;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.ArrayList;
@@ -119,6 +120,13 @@ public class AdminController {
       Schedule mySchedule = new Schedule(movie, room, date, start, end);
       scheduleRepository.save(mySchedule);
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new scedule created
+   }
+
+   @GetMapping("/getAllSchedules")
+   public List<Schedule> getAllCurrentSchedules() {
+      LocalDate date = LocalDate.now();
+      List<Schedule> currentSchedules = scheduleRepository.findByAfter(date);
+      return currentSchedules;
    }
 
    @GetMapping("/getRooms")
