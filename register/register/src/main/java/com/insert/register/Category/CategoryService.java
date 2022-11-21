@@ -9,5 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CategoryService {
     public List<Category> getAllCategories();
+    public Category getCategory(int id);
     public void removeCategory(int id);
 }

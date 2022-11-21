@@ -28,5 +28,10 @@ public class CategoryServiceImpl implements CategoryService{
         Category movie = getAllCategories().stream().filter(a -> a.getCategoryID().equals(id)).findFirst().get();
         categoryRepository.delete(movie);
     }
+
+    @Override
+    public Category getCategory(int id){
+        return categoryRepository.findAll().stream().filter(a -> a.getCategoryID().equals(id)).findFirst().get();
+    }
 }
 

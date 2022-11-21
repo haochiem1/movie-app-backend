@@ -12,6 +12,9 @@ import javax.mail.MessagingException;
 import com.insert.register.Address.AddressRepository;
 import com.insert.register.Card.CardRepository;
 import com.insert.register.User.*;
+
+import net.bytebuddy.asm.Advice.Local;
+
 import com.insert.register.Card.*;
 import com.insert.register.Address.*;
 import com.insert.register.Movie.*;
@@ -340,6 +343,46 @@ public class APIController {
       return movieService.getSearchedMovie(query);
    }
 
+   @GetMapping("/getSearchedMoviesFilter/{query}/{filter}")
+   public List<Movie> getSearchedMoviesFilter(@PathVariable String query, @PathVariable String filter){
+      LocalDate date = LocalDate.now();
+      if(filter.equals("Current"))
+      {
+         List<Movie> currentMovies =  movieRepository.findByStartBefore(date);
+         List<Movie> searchedRepository = movieRepository.findByStartBefore(date);
+         searchedRepository.clear();
+         if(query.equals("="))
+         {
+            return currentMovies;
+         }
+         for (Movie movie: currentMovies) {
+
+            if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
+                searchedRepository.add(movie);
+            }
+        }
+        return searchedRepository;
+      }
+      else if(filter.equals("Upcoming"))
+      {
+         List<Movie> upcomingMovies =  movieRepository.findByStartAfter(date);
+         List<Movie> searchedRepository = movieRepository.findByStartBefore(date);
+         searchedRepository.clear();
+         if(query.equals("="))
+         {
+            return upcomingMovies;
+         }
+         for (Movie movie: upcomingMovies) {
+
+            if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
+                searchedRepository.add(movie);
+            }
+        }
+        return searchedRepository;
+      }
+      return movieService.getSearchedMovie(query);
+   }
+
    @GetMapping("/getAllCurrentMoviesHome")
    public List<Movie> getAllCurrentMoviesHome(){
       LocalDate date = LocalDate.now();
@@ -365,6 +408,11 @@ public class APIController {
    @GetMapping("/getAll/{id}")
    public User getUser(@PathVariable int id){
       return userService.getUser(id);
+   }
+
+   @GetMapping("/getMovie/{id}")
+   public Movie getMovie(@PathVariable int id){
+      return movieService.getMovie(id);
    }
 
    @GetMapping("/getPayment/{id}")
