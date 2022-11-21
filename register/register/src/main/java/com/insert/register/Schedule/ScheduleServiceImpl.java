@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.List;
 
@@ -26,26 +27,24 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     public int validateSchedule(String movie, int room, Date date, Time start, Time end) {
-        Date onePlus = addDays(date, 1);
-        System.out.println(onePlus.toString());
-        System.out.println(date.toString());
-        String sql1 = "SELECT showtimestart FROM showtime WHERE showRoom = ? AND (showtimedate = ? OR showtimedate = ?)";
-        String sql2 = "SELECT showtimefinish FROM showtime WHERE showRoom = ? AND (showtimedate = ? OR showtimedate = ?)";
-        List<String> startTimes= jdbcTemplate.queryForList(sql1, String.class, new Object[]{room, date, onePlus});
-        List<String> endTimes= jdbcTemplate.queryForList(sql2, String.class, new Object[]{room, date, onePlus});
-        System.out.println(startTimes.get(0));
-        System.out.println(endTimes.get(0));
+        String sql1 = "SELECT showtimestart FROM showtime WHERE showRoom = ? AND showtimedate = ?";
+        String sql2 = "SELECT showtimefinish FROM showtime WHERE showRoom = ? AND showtimedate = ?";
+        List<String> startTimes= jdbcTemplate.queryForList(sql1, String.class, new Object[]{room, date});
+        List<String> endTimes= jdbcTemplate.queryForList(sql2, String.class, new Object[]{room, date});
+        if (startTimes.size() != 0) {
+            String startStr = start.toString();
+            String endStr = end.toString();
+            for (int i = 0; i < startTimes.size(); i++) {
+                String star = startTimes.get(i);
+                String en = endTimes.get(i);
+                if ((((LocalTime.parse(star).compareTo(LocalTime.parse(startStr))) == 1) || ((LocalTime.parse(star).compareTo(LocalTime.parse(startStr))) == 0)) && (((LocalTime.parse(star).compareTo(LocalTime.parse(endStr))) == -1) || ((LocalTime.parse(star).compareTo(LocalTime.parse(endStr))) == 0))) {
+                    return 1; //schedule conflict
+                }
+                if ((((LocalTime.parse(en).compareTo(LocalTime.parse(startStr))) == 1) || ((LocalTime.parse(en).compareTo(LocalTime.parse(startStr))) == 0)) && (((LocalTime.parse(en).compareTo(LocalTime.parse(endStr))) == -1) || ((LocalTime.parse(en).compareTo(LocalTime.parse(endStr))) == 0))) {
+                    return 2; //schedule conflict
+                }
+            }
+        }
         return 0;
-    }
-
-    public static Date addDays(Date date, int days)
-    {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String strDate = sdf.format(date);
-        LocalDate localDate = LocalDate.parse(strDate);
-        localDate = localDate.plusDays(-1);
-        String newDate = localDate.toString();
-        Date finalDate = java.sql.Date.valueOf(newDate);
-        return finalDate;
     }
 }

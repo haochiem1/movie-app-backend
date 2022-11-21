@@ -110,9 +110,14 @@ public class AdminController {
       }
       Time start = new Time(hour, min, 0);
       Time end = new Time(endHour, endMin, 0);
-      scheduleService.validateSchedule(movie, room, date, start, end);
-      //Schedule mySchedule = new Schedule(movie, room, date, start, end);
-      //scheduleRepository.save(mySchedule);
+      int valid = scheduleService.validateSchedule(movie, room, date, start, end);
+      if (valid == 1) {
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("1"); // invalid start time
+      } else if (valid == 2) {
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("2"); // invalid end time
+      }
+      Schedule mySchedule = new Schedule(movie, room, date, start, end);
+      scheduleRepository.save(mySchedule);
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new scedule created
    }
 
