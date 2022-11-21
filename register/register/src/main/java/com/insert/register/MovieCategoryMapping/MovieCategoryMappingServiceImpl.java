@@ -25,6 +25,11 @@ public class MovieCategoryMappingServiceImpl implements MovieCategoryMappingServ
         return movieCategoryMappingRepository.findAll();
     }
 
+    public Integer getMovieIDFromCategoryID(int id) {
+        MovieCategoryMapping mapping = getAllMappings().stream().filter(a -> a.getCategoryID().equals(id)).findFirst().get();
+        return mapping.getMovieID();
+    }
+
     public Integer getCategoryIDFromMovieID(int id) {
         MovieCategoryMapping mapping = getAllMappings().stream().filter(a -> a.getMovieID().equals(id)).findFirst().get();
         return mapping.getCategoryID();

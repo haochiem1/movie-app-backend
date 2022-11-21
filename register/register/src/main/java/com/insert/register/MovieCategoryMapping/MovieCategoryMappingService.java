@@ -12,4 +12,5 @@ public interface MovieCategoryMappingService {
     public Integer getCategoryIDFromMovieID(int id);
     public Integer getMappingIDFromMovieID(int id);
     public void removeMapping(int id);
+    public Integer getMovieIDFromCategoryID(int id);
 }
