@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
@@ -13,11 +14,18 @@ import com.insert.register.Promo.PromoRepository;
 import com.insert.register.Address.AddressRepository;
 import com.insert.register.Card.CardRepository;
 import com.insert.register.User.*;
+import com.insert.register.Category.CategoryRepository;
+import com.insert.register.MovieCategoryMapping.MovieCategoryMappingRepository;
+import com.insert.register.MovieCategoryMapping.*;
+
+import net.bytebuddy.asm.Advice.Local;
+
 import com.insert.register.Card.*;
 import com.insert.register.Address.*;
 
 import com.insert.register.Movie.*;
 import com.insert.register.Security.*;
+import com.insert.register.Category.*;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +72,12 @@ public class APIController {
    private MovieService movieService; 
 
    @Autowired
+   private CategoryService categoryService; 
+
+   @Autowired
+   private MovieCategoryMappingService mappingService; 
+
+   @Autowired
    private CardService cardService; 
 
    @Autowired
@@ -72,17 +86,16 @@ public class APIController {
    private final UserRepository userRepository;
    private final CardRepository cardRepository;
    private final AddressRepository addressRepository;
+   private final MovieCategoryMappingRepository movieCategoryMappingRepository;
    private final MovieRepository movieRepository;
-   private final PromoRepository promoRepository;
 
    private User currUser;
 
-   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository, PromoRepository promoRepository) {
+   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository) {
       this.userRepository = userRepository;
       this.cardRepository = cardRepository;
       this.addressRepository = addressRepository;
       this.movieRepository = movieRepository;
-      this.promoRepository = promoRepository;
    }
 
    public String promocode;
@@ -386,6 +399,102 @@ public class APIController {
       return movieService.getSearchedMovie(query);
    }
 
+   @GetMapping("/getSearchedMoviesWithCategory/{query}")
+   public List<Movie> getSearchedMoviesWithCategory(@PathVariable String query){
+      List<Movie> moviesFromSearch = movieService.getSearchedMovie(query);
+
+      List<Category> categoriesFromSearch = categoryService.getMovieWithCategory(query);
+
+      for (Category category: categoriesFromSearch) {
+         moviesFromSearch.add(movieService.getMovie(mappingService.getMovieIDFromCategoryID(category.getCategoryID())));
+      }
+      return moviesFromSearch;
+   }
+
+   public Integer doesMovieHasCategory(Movie movie, String query){
+      return categoryService.getMovieFromCategory(query, mappingService.getCategoryIDFromMovieID(movie.getMovieID()));
+   } 
+
+   @GetMapping("/getSearchedMoviesWithCategoryFilter/{query}/{filter}")
+   public List<Movie> getSearchedMoviesWithCategoryFilter(@PathVariable String query, @PathVariable String filter){
+      LocalDate date = LocalDate.now();
+      if(filter.equals("Current"))
+      {
+         List<Movie> currentMovies =  movieRepository.findByStartBefore(date);
+         List<Movie> searchedRepository = new ArrayList<>();
+         if(query.equals("="))
+         {
+            return currentMovies;
+         }
+         for (Movie movie: currentMovies) {
+            if (doesMovieHasCategory(movie, query) == 1) {
+            searchedRepository.add(movie);
+            } else if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
+               searchedRepository.add(movie);
+           }
+         }
+         return searchedRepository;
+      }
+      else if(filter.equals("Upcoming"))
+      {
+         List<Movie> upcomingMovies =  movieRepository.findByStartAfter(date);
+         List<Movie> searchedRepository = new ArrayList<>();
+         if(query.equals("="))
+         {
+            return upcomingMovies;
+         }
+         for (Movie movie: upcomingMovies) {
+            if (doesMovieHasCategory(movie, query) == 1) {
+            searchedRepository.add(movie);
+            } else if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
+               searchedRepository.add(movie);
+           }
+         }
+         return searchedRepository;
+      }
+      return getSearchedMoviesWithCategory(query);
+   }
+
+   @GetMapping("/getSearchedMoviesFilter/{query}/{filter}")
+   public List<Movie> getSearchedMoviesFilter(@PathVariable String query, @PathVariable String filter){
+      LocalDate date = LocalDate.now();
+      if(filter.equals("Current"))
+      {
+         List<Movie> currentMovies =  movieRepository.findByStartBefore(date);
+         List<Movie> searchedRepository = movieRepository.findByStartBefore(date);
+         searchedRepository.clear();
+         if(query.equals("="))
+         {
+            return currentMovies;
+         }
+         for (Movie movie: currentMovies) {
+
+            if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
+                searchedRepository.add(movie);
+            }
+        }
+        return searchedRepository;
+      }
+      else if(filter.equals("Upcoming"))
+      {
+         List<Movie> upcomingMovies =  movieRepository.findByStartAfter(date);
+         List<Movie> searchedRepository = movieRepository.findByStartBefore(date);
+         searchedRepository.clear();
+         if(query.equals("="))
+         {
+            return upcomingMovies;
+         }
+         for (Movie movie: upcomingMovies) {
+
+            if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
+                searchedRepository.add(movie);
+            }
+        }
+        return searchedRepository;
+      }
+      return movieService.getSearchedMovie(query);
+   }
+
    @GetMapping("/getAllCurrentMoviesHome")
    public List<Movie> getAllCurrentMoviesHome(){
       LocalDate date = LocalDate.now();
@@ -411,6 +520,11 @@ public class APIController {
    @GetMapping("/getAll/{id}")
    public User getUser(@PathVariable int id){
       return userService.getUser(id);
+   }
+
+   @GetMapping("/getMovie/{id}")
+   public Movie getMovie(@PathVariable int id){
+      return movieService.getMovie(id);
    }
 
    @GetMapping("/getPayment/{id}")

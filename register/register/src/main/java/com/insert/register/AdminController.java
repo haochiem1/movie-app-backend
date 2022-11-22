@@ -212,7 +212,7 @@ public class AdminController {
       Integer war = 0;
       if(body.get("war") == "true") war = 1;
       Integer western = 0;
-      if(body.get("wester") == "true") western = 1;
+      if(body.get("western") == "true") western = 1;
       
 
       currCat = new Category(action, adult, adventure, anime, experimental, children, comedy, comedyDrama, crime, drama, epic, fantasy, historical, horror, musical, mystery, romance, scienceFiction, spy, thriller, war, western);
@@ -248,6 +248,18 @@ public class AdminController {
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); 
    }
    
+   @GetMapping("/getMovieCategories/{id}")
+   public Category getMovieCategories(@PathVariable String id) 
+   {
+      Integer movieID = Integer.parseInt(id);
+
+      Integer categoryID = mappingService.getCategoryIDFromMovieID(movieID);
+      
+      
+      
+
+      return categoryService.getCategory(categoryID); 
+   }
 }
 
 
