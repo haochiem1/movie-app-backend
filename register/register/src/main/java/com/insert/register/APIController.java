@@ -222,7 +222,7 @@ public class APIController {
       String city = body.get("city");
       String state = body.get("state");
       String zipcode = body.get("zipCode");
- 
+      System.out.println("Hi" + aptNum);
       addressService.updateAddress(id, street, aptNum, city, state, zipcode);
    }
 
@@ -533,6 +533,33 @@ public class APIController {
    @GetMapping("/getPayment/{id}")
   public Card getCard(@PathVariable int id){
      Card card = cardService.getCard(id);
+     User currUser = userService.getUser(id);
+     String secretKey = currUser.getSecretKey();
+
+     if(card.getCardNumber1() == null || card.getCardNumber1() == "")
+        {
+        }
+        else
+        {
+            card.setCardNumber1(Security.decrypt(card.getCardNumber1(), secretKey));
+            card.setCardNumber1("************" + card.getCardNumber1().substring(12, 16));
+        }
+        if(card.getCardNumber2() == null || card.getCardNumber2() == "")
+        {
+        }
+        else
+        {
+            card.setCardNumber2(Security.decrypt(card.getCardNumber2(), secretKey));
+            card.setCardNumber2("************" + card.getCardNumber2().substring(12, 16));
+        }
+        if(card.getCardNumber3() == null || card.getCardNumber3() == "")
+        {
+        }
+        else
+        {
+            card.setCardNumber3(Security.decrypt(card.getCardNumber3(), secretKey));
+            card.setCardNumber3("************" + card.getCardNumber3().substring(12, 16));
+        }
      System.out.println(card.getExpYear1());
      return card;
   }
