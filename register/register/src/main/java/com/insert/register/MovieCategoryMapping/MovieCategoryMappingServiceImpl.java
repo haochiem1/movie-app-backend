@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MovieCategoryMappingServiceImpl implements MovieCategoryMappingService{
     @Autowired
-    private MovieCategoryMappingRepository MovieCategoryMappingRepository;
     private MovieCategoryMappingRepository movieCategoryMappingRepository;
 
     @Override

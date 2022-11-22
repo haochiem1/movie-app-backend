@@ -3,6 +3,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -95,7 +97,7 @@ public class AdminController {
    }
 
    @PostMapping("/scheduleMovie")
-   public ResponseEntity<String> scheduleMovie(@RequestBody Map<String, String> body) {
+   public ResponseEntity<String> scheduleMovie(@RequestBody Map<String, String> body) throws ParseException{
       String movie = body.get("movie");
       int room = Integer.parseInt(body.get("room"));
       Date date = java.sql.Date.valueOf(body.get("date"));
@@ -103,6 +105,16 @@ public class AdminController {
       int min = Integer.parseInt(body.get("min"));
       String sql = "SELECT duration FROM movie WHERE title = ?";
       List<String> result= jdbcTemplate.queryForList(sql, String.class, new Object[]{movie});
+      String sql2 = "SELECT releaseDate FROM movie WHERE title = ?";
+      List<String> result2 = jdbcTemplate.queryForList(sql2, String.class, new Object[]{movie});
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String myDate = body.get("date");
+      String myDate2 = result2.get(0);
+      java.util.Date d1 = sdf.parse(myDate);
+      java.util.Date d2 = sdf.parse(myDate2);
+      if (d1.compareTo(d2) < 0) {
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("4"); // schedule before release date
+      }
       int duration = Integer.parseInt(result.get(0));
       int durHour = duration / 60;
       int durMin = duration % 60;
@@ -167,7 +179,6 @@ public class AdminController {
 
 
       currMovie = new Movie(title, cast, director, producer, synopsis, duration, rating, reviewsRating, releaseDate, posterLink, trailerLink);
-      movieRepository.save(currMovie);
 
       Integer action = 0;
       if(body.get("action") == "true") action = 1;
@@ -214,21 +225,21 @@ public class AdminController {
       Integer western = 0;
       if(body.get("western") == "true") western = 1;
       
-
+      if (currMovie.getRating().equals("Not Selected")) {
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("2");
+      } else if (action == 0 && adult == 0 && adventure == 0 && anime == 0 && experimental == 0 && children == 0 && comedy == 0 && comedyDrama == 0 && crime == 0 && drama == 0 && epic == 0 && fantasy == 0 && historical == 0 && horror == 0 && musical == 0 && mystery == 0 && romance == 0 && scienceFiction == 0 && spy == 0 && thriller == 0 && war == 0 && western == 0) {
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("2");
+      }
       currCat = new Category(action, adult, adventure, anime, experimental, children, comedy, comedyDrama, crime, drama, epic, fantasy, historical, horror, musical, mystery, romance, scienceFiction, spy, thriller, war, western);
       categoryRepository.save(currCat);
+      movieRepository.save(currMovie);
 
       Integer categoryID = currCat.getCategoryID();
       Integer movieID = currMovie.getMovieID();
       currMapping = new MovieCategoryMapping(movieID, categoryID);
       
       movieCategoryMappingRepository.save(currMapping);
-      System.out.println(title);
-      if (currMovie.getRating().equals("Not Selected")) {
-         return ResponseEntity.status(HttpStatus.ACCEPTED).body("2");
-      } else if (action == 0 && adult == 0 && adventure == 0 && anime == 0 && experimental == 0 && children == 0 && comedy == 0 && comedyDrama == 0 && crime == 0 && drama == 0 && epic == 0 && fantasy == 0 && historical == 0 && horror == 0 && musical == 0 && mystery == 0 && romance == 0 && scienceFiction == 0 && spy == 0 && thriller == 0 && war == 0 && western == 0) {
-         return ResponseEntity.status(HttpStatus.ACCEPTED).body("2");
-      }
+      
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
    }
 

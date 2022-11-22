@@ -159,10 +159,10 @@ public class UserServiceImpl implements UserService {
      }
     public void sendpromoEmail(String first, String last, String email, String promocode, int promopercent) throws UnsupportedEncodingException, MessagingException {
 
-        String subject = "promo code";
+        String subject = "Fandangotothepolls Promotion";
         String senderName = "Fandangotothepolls Team";
         String mailContent = "<P>Dear " + first + " " + last + ",</p>";
-        mailContent += "<p>Here is your promocode " + promocode + " which is "+ promopercent + "% off! </p>";
+        mailContent += "<p>Here is a promotion for you " + promocode + " which is "+ promopercent + "% off! </p>";
         mailContent += "<p>The Fandangotothepolls Team</p>";
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
