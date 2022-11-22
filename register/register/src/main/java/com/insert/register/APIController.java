@@ -88,14 +88,17 @@ public class APIController {
    private final AddressRepository addressRepository;
    private final MovieCategoryMappingRepository movieCategoryMappingRepository;
    private final MovieRepository movieRepository;
+   private final PromoRepository promoRepository;
 
    private User currUser;
 
-   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository) {
+   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository, PromoRepository promoRepository, MovieCategoryMappingRepository movieCategoryMappingRepository) {
       this.userRepository = userRepository;
       this.cardRepository = cardRepository;
       this.addressRepository = addressRepository;
       this.movieRepository = movieRepository;
+      this.promoRepository = promoRepository;
+      this.movieCategoryMappingRepository = movieCategoryMappingRepository;
    }
 
    public String promocode;
