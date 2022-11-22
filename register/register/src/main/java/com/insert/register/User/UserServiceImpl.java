@@ -157,5 +157,24 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encrypted);
         return userRepository.save(user);
      }
+    public void sendpromoEmail(String first, String last, String email, String promocode, int promopercent) throws UnsupportedEncodingException, MessagingException {
+
+        String subject = "promo code";
+        String senderName = "Fandangotothepolls Team";
+        String mailContent = "<P>Dear " + first + " " + last + ",</p>";
+        mailContent += "<p>Here is your promocode " + promocode + " which is "+ promopercent + "% off! </p>";
+        mailContent += "<p>The Fandangotothepolls Team</p>";
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom("Fandangotothepolls@gmail.com", senderName);
+        helper.setTo(email);
+        helper.setSubject(subject);
+
+        helper.setText(mailContent, true);
+
+        mailSender.send(message);
+
+    }
 
 }

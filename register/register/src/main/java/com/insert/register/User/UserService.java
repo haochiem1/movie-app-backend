@@ -19,5 +19,6 @@ public interface UserService {
     public User updatePassword(int id, String password);
     public User checkLogin(String email, String password);
     public void changePasswordEmail(int id, String email) throws UnsupportedEncodingException, MessagingException;
+    public void sendpromoEmail(String first, String last, String email, String promocode, int promopercent) throws UnsupportedEncodingException, MessagingException;
 
 }

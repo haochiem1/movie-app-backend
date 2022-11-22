@@ -9,11 +9,13 @@ import java.util.Random;
 
 import javax.mail.MessagingException;
 
+import com.insert.register.Promo.PromoRepository;
 import com.insert.register.Address.AddressRepository;
 import com.insert.register.Card.CardRepository;
 import com.insert.register.User.*;
 import com.insert.register.Card.*;
 import com.insert.register.Address.*;
+
 import com.insert.register.Movie.*;
 import com.insert.register.Security.*;
 
@@ -22,6 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import com.insert.register.Promo.*;
+
+
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -60,19 +66,26 @@ public class APIController {
    @Autowired
    private CardService cardService; 
 
+   @Autowired
+   private PromoService promoService; 
+
    private final UserRepository userRepository;
    private final CardRepository cardRepository;
    private final AddressRepository addressRepository;
    private final MovieRepository movieRepository;
+   private final PromoRepository promoRepository;
 
    private User currUser;
 
-   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository) {
+   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository, PromoRepository promoRepository) {
       this.userRepository = userRepository;
       this.cardRepository = cardRepository;
       this.addressRepository = addressRepository;
       this.movieRepository = movieRepository;
+      this.promoRepository = promoRepository;
    }
+
+   public String promocode;
 
    @PostMapping("/add")
    public ResponseEntity<String> addUser(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
@@ -102,6 +115,23 @@ public class APIController {
       currUser = new User(firstName, lastName, userPhonenumber, userEmail, encryptedPass ,"Active", promotions, encryptedCode, key, isAdmin);
       userService.sendVerificationEmail(currUser);
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
+   }
+   @PostMapping("/sendpromo")
+   public ResponseEntity<String> addpromoemail(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
+   {
+      String promocode = body.get("promoCode");
+      int promopercent = Integer.parseInt(body.get("promoPercent"));
+      List<User> users = userService.getAllUsers();
+      for (int i = 0; i < users.size(); i++) {
+         User curr = users.get(i);
+         if (curr.getPromotion() == 1) {
+            String first = curr.getFirstName();
+            String last = curr.getLastName();
+            String email = curr.getEmail();
+            userService.sendpromoEmail(first, last, email, promocode, promopercent);
+         }
+      }
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // promotions sent
    }
 
    @PostMapping("/verification")
@@ -299,6 +329,7 @@ public class APIController {
       System.out.println(registeredPromotion);
 
       userService.updateRegPromotion(id, registeredPromotion);
+
    }
 
    @Transactional
@@ -335,6 +366,10 @@ public class APIController {
       }
       return userInfo;
    }
+    @GetMapping("/getPromos")
+    public List<Promo> getAllpromo(){
+        return promoService.getAllpromo();
+    }
 
    @GetMapping("/getAll")
    public List<User> getAllUsers(){
@@ -389,6 +424,24 @@ public class APIController {
    @GetMapping("/getAllAddresses/{id}")
    public Address getAddress(@PathVariable int id){
       return addressService.getAddress(id);
+   }
+
+   @PostMapping("/add-promo")
+   public ResponseEntity<String> addPromo(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
+   {
+      String promocode = body.get("promoCode");
+      String promopercent = body.get("promoPercent");
+      //System.out.println(promocode);
+      //System.out.println(promopercent);
+
+
+
+
+      Promo currPromo = new Promo(promocode,promopercent);
+      promoRepository.save(currPromo);
+
+
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
    }
 
    public String generateVerificationCode() {
