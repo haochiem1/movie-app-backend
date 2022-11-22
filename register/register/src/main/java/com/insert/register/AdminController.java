@@ -62,6 +62,12 @@ public class AdminController {
    @Autowired
    private ScheduleService scheduleService;
 
+   @Autowired
+   private CategoryService categoryService; 
+
+   @Autowired
+   private MovieCategoryMappingService mappingService; 
+
    private final MovieCategoryMappingRepository movieCategoryMappingRepository;
    private final MovieRepository movieRepository;
    private final CategoryRepository categoryRepository;
@@ -221,9 +227,21 @@ public class AdminController {
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
    }
 
+   @PostMapping("/remove-movie")
+   public ResponseEntity<String> removeMovie(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
+   {
+      Integer movieID = Integer.parseInt(body.get("movieID"));
 
+      Integer categoryID = mappingService.getCategoryIDFromMovieID(movieID);
+      Integer mappingID = mappingService.getMappingIDFromMovieID(movieID);
+      
+      mappingService.removeMapping(mappingID);
+      movieService.removeMovie(movieID);
+      categoryService.removeCategory(categoryID);
+      
 
-   
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); 
+   }
    
 }
 
