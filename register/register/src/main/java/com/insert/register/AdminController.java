@@ -184,7 +184,7 @@ public class AdminController {
       Integer comedy = 0;
       if(body.get("comedy") == "true") comedy = 1;
       Integer comedyDrama = 0;
-      if(body.get("comedyDrama") == "true") comedy = 1;
+      if(body.get("comedyDrama") == "true") comedyDrama = 1;
       Integer crime = 0;
       if(body.get("crime") == "true") crime = 1;
       Integer drama = 0;
@@ -224,6 +224,11 @@ public class AdminController {
       
       movieCategoryMappingRepository.save(currMapping);
       System.out.println(title);
+      if (currMovie.getRating().equals("Not Selected")) {
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("2");
+      } else if (action == 0 && adult == 0 && adventure == 0 && anime == 0 && experimental == 0 && children == 0 && comedy == 0 && comedyDrama == 0 && crime == 0 && drama == 0 && epic == 0 && fantasy == 0 && historical == 0 && horror == 0 && musical == 0 && mystery == 0 && romance == 0 && scienceFiction == 0 && spy == 0 && thriller == 0 && war == 0 && western == 0) {
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body("2");
+      }
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
    }
 
