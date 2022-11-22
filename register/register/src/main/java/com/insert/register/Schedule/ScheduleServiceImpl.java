@@ -47,4 +47,9 @@ public class ScheduleServiceImpl implements ScheduleService{
         }
         return 0;
     }
+
+    public void removeSchedule(int id) {
+        Schedule schedule = getAllSchedules().stream().filter(a -> a.getShowtimeID().equals(id)).findFirst().get();
+        scheduleRepository.delete(schedule);
+    }
 }

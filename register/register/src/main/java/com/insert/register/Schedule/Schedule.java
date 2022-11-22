@@ -40,6 +40,14 @@ public class Schedule {
 
     public Schedule() {}
 
+    public Integer getShowtimeID() {
+        return showtimeID;
+    }
+
+    public void setShowtimeID(Integer showtimeID) {
+        this.showtimeID = showtimeID;
+    }
+
     public Time getShowtimefinish() {
         return showtimefinish;
     }

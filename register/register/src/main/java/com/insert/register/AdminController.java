@@ -129,6 +129,13 @@ public class AdminController {
       return currentSchedules;
    }
 
+   @PostMapping("/remove-schedule")
+   public ResponseEntity<String> removeSchedule(@RequestBody Map<String, String> body) {
+      Integer showtimeID = Integer.parseInt(body.get("scheduleID"));
+      scheduleService.removeSchedule(showtimeID);
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body("1"); // schedule successfully removed
+   }
+
    @GetMapping("/getRooms")
    public @ResponseBody List<String> getRooms() {
       String sql = "SELECT * FROM showroom";
