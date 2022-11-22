@@ -159,7 +159,9 @@ public class APIController {
       String expMonth1 = body.get("expMonth");
       String expYear1 = body.get("expYear");
       String billZip1 = body.get("billZip");
-      cardRepository.save(new Card(currUser.getId(), cardNumber1, cardName1, expMonth1, expYear1, billZip1, null, null, null, null, null, null, null, null, null, null));
+      String secretKey = currUser.getSecretKey();
+      String encryptedCardNumber = Security.encrypt(cardNumber1, secretKey);
+      cardRepository.save(new Card(currUser.getId(), encryptedCardNumber, cardName1, expMonth1, expYear1, billZip1, null, null, null, null, null, null, null, null, null, null));
       addressRepository.save(new Address(currUser.getId(), street, aptNum, city, state, zipcode));
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("New user created");
    }
@@ -188,8 +190,11 @@ public class APIController {
       String expMonth1 = body.get("expMonth1");
       String expYear1 = body.get("expYear1");
       String billZip1 = body.get("billZip1");
+      User rUser = userService.getUser(id);
+      String secretKey = rUser.getSecretKey();
+      String encryptedCardNumber = Security.encrypt(cardNumber1, secretKey);
  
-      cardService.updatePayment1(id, cardName1, cardNumber1, expMonth1, expYear1, billZip1);
+      cardService.updatePayment1(id, cardName1, encryptedCardNumber, expMonth1, expYear1, billZip1);
    }
 
    @Transactional
@@ -202,8 +207,11 @@ public class APIController {
       String expMonth2 = body.get("expMonth2");
       String expYear2 = body.get("expYear2");
       String billZip2 = body.get("billZip2");
+      User rUser = userService.getUser(id);
+      String secretKey = rUser.getSecretKey();
+      String encryptedCardNumber = Security.encrypt(cardNumber2, secretKey);
  
-      cardService.updatePayment2(id, cardName2, cardNumber2, expMonth2, expYear2, billZip2);
+      cardService.updatePayment2(id, cardName2, encryptedCardNumber, expMonth2, expYear2, billZip2);
    }
 
    @Transactional
@@ -216,8 +224,11 @@ public class APIController {
       String expMonth3 = body.get("expMonth3");
       String expYear3 = body.get("expYear3");
       String billZip3 = body.get("billZip3");
+      User rUser = userService.getUser(id);
+      String secretKey = rUser.getSecretKey();
+      String encryptedCardNumber = Security.encrypt(cardNumber3, secretKey);
  
-      cardService.updatePayment3(id, cardName3, cardNumber3, expMonth3, expYear3, billZip3);
+      cardService.updatePayment3(id, cardName3, encryptedCardNumber, expMonth3, expYear3, billZip3);
    }
 
    @Transactional
