@@ -37,10 +37,15 @@ public class ScheduleServiceImpl implements ScheduleService{
             for (int i = 0; i < startTimes.size(); i++) {
                 String star = startTimes.get(i);
                 String en = endTimes.get(i);
-                if ((((LocalTime.parse(star).compareTo(LocalTime.parse(startStr))) == 1) || ((LocalTime.parse(star).compareTo(LocalTime.parse(startStr))) == 0)) && (((LocalTime.parse(star).compareTo(LocalTime.parse(endStr))) == -1) || ((LocalTime.parse(star).compareTo(LocalTime.parse(endStr))) == 0))) {
+                if ((LocalTime.parse(startStr).compareTo(LocalTime.parse(star)) == 1) && (LocalTime.parse(startStr).compareTo(LocalTime.parse(en)) == -1)) {
+                    System.out.println(LocalTime.parse(star).compareTo(LocalTime.parse(startStr)));
+                    return 1; //schedule conflict
+                } else if (((LocalTime.parse(startStr).compareTo(LocalTime.parse(star)) == 0) || (LocalTime.parse(startStr).compareTo(LocalTime.parse(en)) == 0))) {
                     return 1; //schedule conflict
                 }
-                if ((((LocalTime.parse(en).compareTo(LocalTime.parse(startStr))) == 1) || ((LocalTime.parse(en).compareTo(LocalTime.parse(startStr))) == 0)) && (((LocalTime.parse(en).compareTo(LocalTime.parse(endStr))) == -1) || ((LocalTime.parse(en).compareTo(LocalTime.parse(endStr))) == 0))) {
+                if ((LocalTime.parse(endStr).compareTo(LocalTime.parse(star)) == 1) && (LocalTime.parse(endStr).compareTo(LocalTime.parse(en)) == -1)) {
+                    return 2; //schedule conflict
+                } else if (((LocalTime.parse(endStr).compareTo(LocalTime.parse(star)) == 0) || (LocalTime.parse(endStr).compareTo(LocalTime.parse(en)) == 0))) {
                     return 2; //schedule conflict
                 }
             }
