@@ -138,7 +138,6 @@ public class UserServiceImpl implements UserService {
         try {
             User user = getAllUsers().stream().filter(a -> a.getEmail().equals(email)).findFirst().get();
             String decrypted = Security.decrypt(user.getPassword(), user.getSecretKey());
-
             if (decrypted.equals(password)) {
                 return user;
             }

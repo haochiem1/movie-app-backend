@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 
 import com.insert.register.Promo.PromoRepository;
+import com.insert.register.Schedule.ScheduleService;
 import com.insert.register.Address.AddressRepository;
 import com.insert.register.Card.CardRepository;
 import com.insert.register.User.*;
@@ -26,6 +27,7 @@ import com.insert.register.Address.*;
 import com.insert.register.Movie.*;
 import com.insert.register.Security.*;
 import com.insert.register.Category.*;
+import com.insert.register.Schedule.*;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,22 +85,27 @@ public class APIController {
    @Autowired
    private PromoService promoService; 
 
+   @Autowired
+   private ScheduleService scheduleService;
+
    private final UserRepository userRepository;
    private final CardRepository cardRepository;
    private final AddressRepository addressRepository;
    private final MovieCategoryMappingRepository movieCategoryMappingRepository;
    private final MovieRepository movieRepository;
    private final PromoRepository promoRepository;
+   private final ScheduleRepository scheduleRepository;
 
    private User currUser;
 
-   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository, PromoRepository promoRepository, MovieCategoryMappingRepository movieCategoryMappingRepository) {
+   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository, PromoRepository promoRepository, MovieCategoryMappingRepository movieCategoryMappingRepository, ScheduleRepository scheduleRepository) {
       this.userRepository = userRepository;
       this.cardRepository = cardRepository;
       this.addressRepository = addressRepository;
       this.movieRepository = movieRepository;
       this.promoRepository = promoRepository;
       this.movieCategoryMappingRepository = movieCategoryMappingRepository;
+      this.scheduleRepository = scheduleRepository;
    }
 
    public String promocode;
@@ -601,6 +608,22 @@ public class APIController {
         .toString();
 
       return generatedString;
+   }
+
+   @PostMapping("/getMovieSchedule")
+   public List<Schedule> getMovieSchedule(@RequestBody Map<String, String> body)
+   {
+      int id = Integer.parseInt(body.get("movieID"));
+      System.out.println(id);
+      long millis=System.currentTimeMillis();  
+      long weekLater = millis + (86400 * 7 * 1000);
+      java.sql.Date date1 = new java.sql.Date(millis); 
+      java.sql.Date date2 = new java.sql.Date(weekLater); 
+      List<Schedule> movieSchedules = scheduleRepository.findMovieSchedules(id, date1, date2);
+      return movieSchedules;
+
+      //List<Schedule> currentSchedules = scheduleRepository.findByAfter(date);
+
    }
    
 }

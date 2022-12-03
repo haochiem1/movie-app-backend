@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -57,4 +58,5 @@ public class ScheduleServiceImpl implements ScheduleService{
         Schedule schedule = getAllSchedules().stream().filter(a -> a.getShowtimeID().equals(id)).findFirst().get();
         scheduleRepository.delete(schedule);
     }
+
 }
