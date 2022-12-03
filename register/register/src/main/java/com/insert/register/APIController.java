@@ -614,7 +614,6 @@ public class APIController {
    public List<Schedule> getMovieSchedule(@RequestBody Map<String, String> body)
    {
       int id = Integer.parseInt(body.get("movieID"));
-      System.out.println(id);
       long millis=System.currentTimeMillis();  
       long weekLater = millis + (86400 * 7 * 1000);
       java.sql.Date date1 = new java.sql.Date(millis); 
