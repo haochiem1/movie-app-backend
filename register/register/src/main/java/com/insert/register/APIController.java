@@ -635,8 +635,11 @@ public class APIController {
       long millis=System.currentTimeMillis();  
       long weekLater = millis + (86400 * 7 * 1000);
       java.sql.Date date1 = new java.sql.Date(millis); 
-      java.sql.Date date2 = new java.sql.Date(weekLater); 
+      java.sql.Date date2 = new java.sql.Date(weekLater);
+      System.out.println(date1);
+      System.out.println(date2); 
       List<Schedule> movieSchedules = scheduleRepository.findMovieSchedules(id, date1, date2);
+   
       return movieSchedules;
 
       //List<Schedule> currentSchedules = scheduleRepository.findByAfter(date);
