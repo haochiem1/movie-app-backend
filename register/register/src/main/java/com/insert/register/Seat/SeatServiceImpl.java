@@ -21,4 +21,8 @@ public class SeatServiceImpl implements SeatService{
     @Autowired
     private SeatRepository seatRepository;
     
+    @Override
+    public List<Seat> getSeatsFromShowtime(Integer showtimeID) {
+        return seatRepository.findAll().stream().filter(a -> a.getShowtime().equals(showtimeID)).collect(Collectors.toList());
+    }
 }

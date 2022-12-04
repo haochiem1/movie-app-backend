@@ -15,6 +15,7 @@ import com.insert.register.Promo.PromoRepository;
 import com.insert.register.Schedule.ScheduleService;
 import com.insert.register.Address.AddressRepository;
 import com.insert.register.Card.CardRepository;
+import com.insert.register.Seat.SeatRepository;
 import com.insert.register.User.*;
 import com.insert.register.Category.CategoryRepository;
 import com.insert.register.MovieCategoryMapping.MovieCategoryMappingRepository;
@@ -29,6 +30,7 @@ import com.insert.register.Movie.*;
 import com.insert.register.Security.*;
 import com.insert.register.Category.*;
 import com.insert.register.Schedule.*;
+import com.insert.register.Seat.*;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +91,9 @@ public class APIController {
    @Autowired
    private ScheduleService scheduleService;
 
+   @Autowired
+   private SeatService seatService;
+
    private final UserRepository userRepository;
    private final CardRepository cardRepository;
    private final AddressRepository addressRepository;
@@ -96,10 +101,11 @@ public class APIController {
    private final MovieRepository movieRepository;
    private final PromoRepository promoRepository;
    private final ScheduleRepository scheduleRepository;
+   private final SeatRepository seatRepository;
 
    private User currUser;
 
-   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository, PromoRepository promoRepository, MovieCategoryMappingRepository movieCategoryMappingRepository, ScheduleRepository scheduleRepository) {
+   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository, PromoRepository promoRepository, MovieCategoryMappingRepository movieCategoryMappingRepository, ScheduleRepository scheduleRepository, SeatRepository seatRepository) {
       this.userRepository = userRepository;
       this.cardRepository = cardRepository;
       this.addressRepository = addressRepository;
@@ -107,6 +113,7 @@ public class APIController {
       this.promoRepository = promoRepository;
       this.movieCategoryMappingRepository = movieCategoryMappingRepository;
       this.scheduleRepository = scheduleRepository;
+      this.seatRepository = seatRepository;
    }
 
    public String promocode;
@@ -646,5 +653,15 @@ public class APIController {
 
    }
    
+   @GetMapping("/getSeating/{id}")
+   public List<Seat> getSeatsFromShowtimeID(@PathVariable int id)
+   {
+      List<Seat> seats = seatService.getSeatsFromShowtime(id);
+      System.out.println(seats);
+      return seats;
+
+      //List<Schedule> currentSchedules = scheduleRepository.findByAfter(date);
+
+   }
 }
 

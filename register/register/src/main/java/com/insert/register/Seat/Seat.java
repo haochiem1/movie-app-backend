@@ -23,14 +23,11 @@ public class Seat {
     @Column(name="row")
     private String row;
 
-    @Column(name="rowNum")
-    private Integer rowNum;
 
-    public Seat(Integer showtime, Integer showroom, String row, Integer rowNum) {
+    public Seat(Integer showtime, Integer showroom, String row) {
         this.showtime = showtime;
         this.showroom = showroom;
         this.row = row;
-        this.rowNum = rowNum;
     }
 
     public Seat() {}
@@ -51,10 +48,6 @@ public class Seat {
         this.row = row;
     }
 
-    public void setRowNum(Integer rowNum) {
-        this.rowNum = rowNum;
-    }
-
     public Integer getSeatID() {
         return seatID;
     }
@@ -69,9 +62,5 @@ public class Seat {
 
     public String getRow() {
         return row;
-    }
-
-    public Integer getRowNum() {
-        return rowNum;
     }
 }
