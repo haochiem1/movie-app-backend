@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -535,6 +536,23 @@ public class APIController {
    @GetMapping("/getMovie/{id}")
    public Movie getMovie(@PathVariable int id){
       return movieService.getMovie(id);
+   }
+
+   @GetMapping("/getPromo/{code}")
+   public String getPromoFromCode(@PathVariable String code){
+      try{
+         String promo = promoService.getPromoFromCode(code).getPromoPercent();
+         if(promo != null)
+         {
+            return promo;
+         }
+      }
+      catch(NoSuchElementException e)
+      {
+          return "0";
+      }
+      return "0";
+      
    }
 
    @GetMapping("/getPayment/{id}")
