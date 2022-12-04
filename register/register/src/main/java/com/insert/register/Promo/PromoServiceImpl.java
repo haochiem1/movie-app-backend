@@ -24,5 +24,10 @@ public class PromoServiceImpl implements PromoService {
         return promoRepository.findAll();
     }
 
+    @Override
+    public Promo getPromoFromCode(String Code)
+    {
+        return getAllpromo().stream().filter(a -> a.getpromoCode().toLowerCase().equals(Code.toLowerCase())).findFirst().get();
+    }
 
 }

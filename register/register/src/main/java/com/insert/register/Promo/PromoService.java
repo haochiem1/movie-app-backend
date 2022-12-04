@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service;
 public interface PromoService {
     public Promo savePromo(Promo promo);
     public List<Promo> getAllpromo();
+    public Promo getPromoFromCode(String Code);
 }
