@@ -664,5 +664,19 @@ public class APIController {
       //List<Schedule> currentSchedules = scheduleRepository.findByAfter(date);
 
    }
+
+   @PostMapping("/orderConfirmationEmail") 
+   public ResponseEntity<String> orderVerification(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException {
+      String userID = body.get("userID");
+      String movieName = body.get("movieName");
+      String total = body.get("total");
+      String numAdult = body.get("numAdult");
+      String numChildren = body.get("numChildren");
+      String confirmationCode = body.get("confirmationCode");
+      User myUser = userService.getUser(Integer.parseInt(userID));
+      userService.orderConfirmation(myUser, movieName, total, numAdult, numChildren, confirmationCode);
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body("verified");
+   }
+
 }
 

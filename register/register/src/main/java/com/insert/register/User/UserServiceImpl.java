@@ -87,6 +87,26 @@ public class UserServiceImpl implements UserService {
         mailSender.send(message);
      }
 
+     public void orderConfirmation(User myUser, String movieName, String total, String numAdult, String numChildren, String confirmationCode) throws UnsupportedEncodingException, MessagingException {
+        String subject = "Order Confirmation";
+        String senderName = "Fandangotothepolls Team";
+        String mailContent = "<P>Dear " + myUser.getFirstName() + " " + myUser.getLastName() + ",</p>";
+        mailContent += "<p>Your order for the movie " + movieName + " has been received!</p>"; 
+        mailContent += "<p>You ordered " + numAdult + "x adult tickets and " + numChildren + "x child tickets</p>"; 
+        mailContent += "<p>Your total came out to " + total + " and your confirmation code is " + confirmationCode + "</p>";
+        mailContent += "<p>The Fandangotothepolls Team</p>";
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom("Fandangotothepolls@gmail.com", senderName);
+        helper.setTo(myUser.getEmail());
+        helper.setSubject(subject);
+
+        helper.setText(mailContent, true);
+
+        mailSender.send(message);
+     }
+
      @Transactional
      @Override
      public User updateName(int id, String firstName, String lastName)
