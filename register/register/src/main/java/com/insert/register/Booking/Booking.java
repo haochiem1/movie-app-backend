@@ -19,10 +19,6 @@ public class Booking {
         private int showtimeBooked;
         @Column(name="userBooked")
         private int userBooked;
-        @Column(name="creditCardID")
-        private int creditCardID;
-        @Column(name="promotionID")
-        private int promotionID;
         @Column(name="totalCost")
         private double totalCost;
         @Column(name="movieBooked")
@@ -30,12 +26,10 @@ public class Booking {
         @Column(name="showroomBooked")
         private int showroomBooked;
     
-        public Booking(int bookingID, int showtimeBooked, int userBooked, int creditCardID, int promotionID, double totalCost, int movieBooked, int showroomBooked) {
+        public Booking(int bookingID, int showtimeBooked, int userBooked, double totalCost, int movieBooked, int showroomBooked) {
             this.bookingID = bookingID;
             this.showtimeBooked = showtimeBooked;
             this.userBooked = userBooked;
-            this.creditCardID = creditCardID;
-            this.promotionID = promotionID;
             this.totalCost = totalCost;
             this.movieBooked = movieBooked;
             this.showroomBooked = showroomBooked;
@@ -53,12 +47,6 @@ public class Booking {
         }
         public void setUserBooked (int userBooked) {
             this.userBooked= userBooked;
-        }
-        public void setCreditCardID (int creditCardID) {
-            this.creditCardID = creditCardID;
-        }
-        public void setPromotionID (int promotionID) {
-            this.promotionID = promotionID;
         }
         public void setTotalCost (double totalCost) {
             this.totalCost = totalCost;
@@ -79,12 +67,6 @@ public class Booking {
         }
         public Integer getUserBooked() {
             return userBooked;
-        }
-        public Integer getCreditCardID() {
-            return creditCardID;
-        }
-        public Integer getPromotionID() {
-            return promotionID;
         }
         public Double getTotalCost() {
             return totalCost;

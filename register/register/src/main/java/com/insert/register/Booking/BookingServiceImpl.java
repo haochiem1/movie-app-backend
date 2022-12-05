@@ -10,5 +10,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @CrossOrigin(origins = "*")
 @Service
 public class BookingServiceImpl implements BookingService{
+
+    @Override
+    public Booking saveBooking(Booking booking){
+        return bookingRepository.save(booking);
+    }
     
 }
