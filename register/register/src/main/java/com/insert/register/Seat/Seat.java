@@ -7,8 +7,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Entity
 @Table(name = "seat")
+@Transactional
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,14 +23,14 @@ public class Seat {
     @Column(name="showroom")
     private Integer showroom;
 
-    @Column(name="row")
-    private String row;
+    @Column(name="seat")
+    private String seat;
 
 
-    public Seat(Integer showtime, Integer showroom, String row) {
+    public Seat(Integer showtime, Integer showroom, String seat) {
         this.showtime = showtime;
         this.showroom = showroom;
-        this.row = row;
+        this.seat = seat;
     }
 
     public Seat() {}
@@ -44,8 +47,8 @@ public class Seat {
         this.showroom = showroom;
     }
 
-    public void setRow(String row) {
-        this.row = row;
+    public void setSeat(String seat) {
+        this.seat = seat;
     }
 
     public Integer getSeatID() {
@@ -60,7 +63,7 @@ public class Seat {
         return showroom;
     }
 
-    public String getRow() {
-        return row;
+    public String getSeat() {
+        return seat;
     }
 }

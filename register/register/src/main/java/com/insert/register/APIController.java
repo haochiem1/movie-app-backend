@@ -14,6 +14,9 @@ import javax.mail.MessagingException;
 import com.insert.register.Promo.PromoRepository;
 import com.insert.register.Schedule.ScheduleService;
 import com.insert.register.Address.AddressRepository;
+import com.insert.register.Booking.Booking;
+import com.insert.register.Booking.BookingRepository;
+import com.insert.register.Booking.BookingService;
 import com.insert.register.Card.CardRepository;
 import com.insert.register.Seat.SeatRepository;
 import com.insert.register.User.*;
@@ -94,6 +97,9 @@ public class APIController {
    @Autowired
    private SeatService seatService;
 
+   @Autowired
+   private BookingService bookingService;
+
    private final UserRepository userRepository;
    private final CardRepository cardRepository;
    private final AddressRepository addressRepository;
@@ -102,10 +108,12 @@ public class APIController {
    private final PromoRepository promoRepository;
    private final ScheduleRepository scheduleRepository;
    private final SeatRepository seatRepository;
+   private final BookingRepository bookingRepository;
 
    private User currUser;
+   
 
-   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository, PromoRepository promoRepository, MovieCategoryMappingRepository movieCategoryMappingRepository, ScheduleRepository scheduleRepository, SeatRepository seatRepository) {
+   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository, PromoRepository promoRepository, MovieCategoryMappingRepository movieCategoryMappingRepository, ScheduleRepository scheduleRepository, SeatRepository seatRepository, BookingRepository bookingRepository) {
       this.userRepository = userRepository;
       this.cardRepository = cardRepository;
       this.addressRepository = addressRepository;
@@ -114,6 +122,7 @@ public class APIController {
       this.movieCategoryMappingRepository = movieCategoryMappingRepository;
       this.scheduleRepository = scheduleRepository;
       this.seatRepository = seatRepository;
+      this.bookingRepository = bookingRepository;
    }
 
    public String promocode;
@@ -683,5 +692,34 @@ public class APIController {
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("verified");
    }
 
+   @PostMapping("/bookingAdd")
+   public ResponseEntity<String> addBooking(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
+   {
+      Integer showtimeBooking = Integer.parseInt(body.get("showtimeBooked"));
+      Integer userBooked = Integer.parseInt(body.get("userBooked"));
+      Double totalCost = Double.parseDouble(body.get("totalCost"));
+      Integer movieBooked = Integer.parseInt(body.get("movieBooked"));
+      Integer showroomBooked = Integer.parseInt(body.get("showroomBooked"));
+      
+      Booking currBooking  = new Booking(showtimeBooking, userBooked, totalCost, movieBooked, showroomBooked);
+      bookingService.saveBooking(currBooking);
+
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
+   }
+
+   @PostMapping("/seatAdd")
+   public ResponseEntity<String> addSeat(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
+   {
+      System.out.println(body.get("row") + "HELLO!");
+
+      Integer showtime = Integer.parseInt(body.get("showtime"));
+      Integer showroom = Integer.parseInt(body.get("showRoom"));
+      String seat = body.get("row");
+      
+      Seat currSeat = new Seat(showtime, showroom, seat);
+      seatRepository.save(currSeat);
+
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
+   }
 }
 

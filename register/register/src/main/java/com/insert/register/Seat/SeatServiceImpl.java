@@ -25,4 +25,8 @@ public class SeatServiceImpl implements SeatService{
     public List<Seat> getSeatsFromShowtime(Integer showtimeID) {
         return seatRepository.findAll().stream().filter(a -> a.getShowtime().equals(showtimeID)).collect(Collectors.toList());
     }
+
+    public Seat saveSeat(Seat seat){
+        return seatRepository.save(seat);
+    }
 }

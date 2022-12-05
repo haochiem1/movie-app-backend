@@ -2,6 +2,8 @@ package com.insert.register.Booking;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
     
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class Booking {
     
         @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
         @Column(name="bookingID")
         private int bookingID;
         @Column(name="showtimeBooked")
@@ -26,8 +29,7 @@ public class Booking {
         @Column(name="showroomBooked")
         private int showroomBooked;
     
-        public Booking(int bookingID, int showtimeBooked, int userBooked, double totalCost, int movieBooked, int showroomBooked) {
-            this.bookingID = bookingID;
+        public Booking(int showtimeBooked, int userBooked, double totalCost, int movieBooked, int showroomBooked) {
             this.showtimeBooked = showtimeBooked;
             this.userBooked = userBooked;
             this.totalCost = totalCost;
