@@ -693,7 +693,7 @@ public class APIController {
    }
 
    @PostMapping("/bookingAdd")
-   public ResponseEntity<String> addBooking(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
+   public ResponseEntity<Integer> addBooking(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
    {
       Integer showtimeBooking = Integer.parseInt(body.get("showtimeBooked"));
       Integer userBooked = Integer.parseInt(body.get("userBooked"));
@@ -704,19 +704,18 @@ public class APIController {
       Booking currBooking  = new Booking(showtimeBooking, userBooked, totalCost, movieBooked, showroomBooked);
       bookingService.saveBooking(currBooking);
 
-      return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body(currBooking.getBookingID()); // new user created
    }
 
    @PostMapping("/seatAdd")
    public ResponseEntity<String> addSeat(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
    {
-      System.out.println(body.get("row") + "HELLO!");
-
       Integer showtime = Integer.parseInt(body.get("showtime"));
       Integer showroom = Integer.parseInt(body.get("showRoom"));
       String seat = body.get("row");
-      
-      Seat currSeat = new Seat(showtime, showroom, seat);
+      Integer bookingID = Integer.parseInt(body.get("bookingID"));
+      System.out.println(bookingID + "HEELELLE");
+      Seat currSeat = new Seat(showtime, showroom, seat, bookingID);
       seatRepository.save(currSeat);
 
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created

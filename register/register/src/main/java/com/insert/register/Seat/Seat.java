@@ -26,11 +26,14 @@ public class Seat {
     @Column(name="seat")
     private String seat;
 
+    @Column(name="bookingID")
+    private Integer bookingID;
 
-    public Seat(Integer showtime, Integer showroom, String seat) {
+    public Seat(Integer showtime, Integer showroom, String seat, Integer bookingID) {
         this.showtime = showtime;
         this.showroom = showroom;
         this.seat = seat;
+        this.bookingID = bookingID;
     }
 
     public Seat() {}
@@ -51,6 +54,10 @@ public class Seat {
         this.seat = seat;
     }
 
+    public void setBookingID(Integer bookingID) {
+        this.bookingID = bookingID;
+    }
+
     public Integer getSeatID() {
         return seatID;
     }
@@ -65,5 +72,9 @@ public class Seat {
 
     public String getSeat() {
         return seat;
+    }
+
+    public Integer getBookingID() {
+        return bookingID;
     }
 }
