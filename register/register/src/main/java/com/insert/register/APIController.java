@@ -602,6 +602,11 @@ public class APIController {
       return addressService.getAddress(id);
    }
 
+   @GetMapping("/getSchedule/{id}")
+   public Schedule getSchedule(@PathVariable int id){
+      return scheduleService.getSchedule(id);
+   }
+
    @PostMapping("/add-promo")
    public ResponseEntity<String> addPromo(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException
    {

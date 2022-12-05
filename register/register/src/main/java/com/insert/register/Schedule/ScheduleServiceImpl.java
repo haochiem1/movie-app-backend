@@ -59,4 +59,8 @@ public class ScheduleServiceImpl implements ScheduleService{
         scheduleRepository.delete(schedule);
     }
 
+    public Schedule getSchedule(int id)
+    {
+        return getAllSchedules().stream().filter(a -> a.getShowtimeID().equals(id)).findFirst().get();
+    }
 }
