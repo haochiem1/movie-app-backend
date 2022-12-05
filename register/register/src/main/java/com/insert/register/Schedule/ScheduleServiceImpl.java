@@ -2,12 +2,8 @@ package com.insert.register.Schedule;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -2,10 +2,8 @@ package com.insert.register;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication //(scanBasePackages={"com.insert.register"})
-//@ComponentScan(basePackages = {"com.insert.register"})
+@SpringBootApplication
 public class RegisterApplication {
 
 	public static void main(String[] args) {
@@ -13,5 +11,3 @@ public class RegisterApplication {
 	}
 
 }
-
-//(scanBasePackages={"com.insert.register.UserService"})

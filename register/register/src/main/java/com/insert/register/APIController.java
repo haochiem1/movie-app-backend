@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
@@ -15,16 +14,11 @@ import com.insert.register.Promo.PromoRepository;
 import com.insert.register.Schedule.ScheduleService;
 import com.insert.register.Address.AddressRepository;
 import com.insert.register.Booking.Booking;
-import com.insert.register.Booking.BookingRepository;
 import com.insert.register.Booking.BookingService;
 import com.insert.register.Card.CardRepository;
 import com.insert.register.Seat.SeatRepository;
 import com.insert.register.User.*;
-import com.insert.register.Category.CategoryRepository;
-import com.insert.register.MovieCategoryMapping.MovieCategoryMappingRepository;
 import com.insert.register.MovieCategoryMapping.*;
-
-import net.bytebuddy.asm.Advice.Local;
 
 import com.insert.register.Card.*;
 import com.insert.register.Address.*;
@@ -103,26 +97,22 @@ public class APIController {
    private final UserRepository userRepository;
    private final CardRepository cardRepository;
    private final AddressRepository addressRepository;
-   private final MovieCategoryMappingRepository movieCategoryMappingRepository;
    private final MovieRepository movieRepository;
    private final PromoRepository promoRepository;
    private final ScheduleRepository scheduleRepository;
    private final SeatRepository seatRepository;
-   private final BookingRepository bookingRepository;
 
    private User currUser;
    
 
-   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository, PromoRepository promoRepository, MovieCategoryMappingRepository movieCategoryMappingRepository, ScheduleRepository scheduleRepository, SeatRepository seatRepository, BookingRepository bookingRepository) {
+   public APIController(UserRepository userRepository, CardRepository cardRepository, AddressRepository addressRepository, MovieRepository movieRepository, PromoRepository promoRepository, ScheduleRepository scheduleRepository, SeatRepository seatRepository) {
       this.userRepository = userRepository;
       this.cardRepository = cardRepository;
       this.addressRepository = addressRepository;
       this.movieRepository = movieRepository;
       this.promoRepository = promoRepository;
-      this.movieCategoryMappingRepository = movieCategoryMappingRepository;
       this.scheduleRepository = scheduleRepository;
       this.seatRepository = seatRepository;
-      this.bookingRepository = bookingRepository;
    }
 
    public String promocode;
@@ -682,13 +672,18 @@ public class APIController {
    @PostMapping("/orderConfirmationEmail") 
    public ResponseEntity<String> orderVerification(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, MessagingException {
       String userID = body.get("userID");
-      String movieName = body.get("movieName");
-      String total = body.get("total");
+      int movieID = Integer.parseInt(body.get("movieId"));
+      String total = body.get("totalCost");
       String numAdult = body.get("numAdult");
       String numChildren = body.get("numChildren");
-      String confirmationCode = body.get("confirmationCode");
+      String seats = body.get("seatsBooked");
+      String room = body.get("showroomBooked");
+      String date = body.get("movieDate");
+      String time = body.get("movieTime");
+      Movie myMovie = movieService.getMovie(movieID);
+      String movieName = myMovie.getTitle();
       User myUser = userService.getUser(Integer.parseInt(userID));
-      userService.orderConfirmation(myUser, movieName, total, numAdult, numChildren, confirmationCode);
+      userService.orderConfirmation(myUser, movieName, total, numAdult, numChildren, seats, room, date, time);
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("verified");
    }
 

@@ -1,17 +1,13 @@
 package com.insert.register;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Random;
 
 import javax.mail.MessagingException;
 
@@ -34,7 +30,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,11 +1,7 @@
 package com.insert.register.Movie;
-import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
+
 import java.util.List;
 
-import javax.mail.MessagingException;
-
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 @Service

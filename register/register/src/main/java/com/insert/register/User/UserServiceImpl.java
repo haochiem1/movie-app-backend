@@ -87,13 +87,31 @@ public class UserServiceImpl implements UserService {
         mailSender.send(message);
      }
 
-     public void orderConfirmation(User myUser, String movieName, String total, String numAdult, String numChildren, String confirmationCode) throws UnsupportedEncodingException, MessagingException {
+     public void orderConfirmation(User myUser, String movieName, String total, String numAdult, String numChildren, String seats, String room, String date, String time) throws UnsupportedEncodingException, MessagingException {
         String subject = "Order Confirmation";
         String senderName = "Fandangotothepolls Team";
         String mailContent = "<P>Dear " + myUser.getFirstName() + " " + myUser.getLastName() + ",</p>";
-        mailContent += "<p>Your order for the movie " + movieName + " has been received!</p>"; 
-        mailContent += "<p>You ordered " + numAdult + "x adult tickets and " + numChildren + "x child tickets</p>"; 
-        mailContent += "<p>Your total came out to " + total + " and your confirmation code is " + confirmationCode + "</p>";
+        String adultMSG = "";
+        String childMSG = "";
+        if (Integer.parseInt(numAdult) > 0) {
+            adultMSG = numAdult + "x adult tickets";
+        }
+        if (Integer.parseInt(numChildren) > 0) {
+            if (Integer.parseInt(numAdult) > 0) {
+                childMSG = " and " + numChildren + "x child tickets.";
+            } else {
+                childMSG = numChildren + "x child tickets.";
+            }
+        }
+        int numCom = countCommas(seats);
+        String seatMSG = "seat ";
+        if (numCom > 0) {
+            seatMSG = "seats ";
+        }
+        mailContent += "<p>Your order for the movie " + movieName + " on " + date + " at " + time + " has been received!</p>"; 
+        mailContent += "<p>You ordered " + adultMSG + childMSG + "</p>"; 
+        mailContent += "<p>The movie will be in showroom #" + room + " and you have reserved " + seatMSG + msgSep(seats) + "</p>"; 
+        mailContent += "<p>Your total came out to $" + total + ", please let us know if you have any questions!</p>";
         mailContent += "<p>The Fandangotothepolls Team</p>";
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -105,6 +123,28 @@ public class UserServiceImpl implements UserService {
         helper.setText(mailContent, true);
 
         mailSender.send(message);
+     }
+
+     public String msgSep(String seats) {
+        String endStr = "";
+        for (int i = 0; i < seats.length(); i++) {
+            if (seats.charAt(i) == ',') {
+                endStr += ", ";
+            } else {
+                endStr += seats.charAt(i);
+            }
+        }
+        return endStr;
+     }
+
+     public int countCommas(String seats) {
+        int count = 0;
+        for (int i = 0; i < seats.length(); i++) {
+            if (seats.charAt(i) == ',') {
+                count++;
+            }
+        }
+        return count;
      }
 
      @Transactional

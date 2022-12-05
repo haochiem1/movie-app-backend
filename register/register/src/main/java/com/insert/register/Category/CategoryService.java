@@ -1,8 +1,6 @@
 package com.insert.register.Category;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
 
-import javax.mail.MessagingException;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
