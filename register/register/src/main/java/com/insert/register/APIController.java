@@ -28,6 +28,7 @@ import com.insert.register.Security.*;
 import com.insert.register.Category.*;
 import com.insert.register.Schedule.*;
 import com.insert.register.Seat.*;
+import com.insert.register.OrderHistory.*;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -714,6 +715,31 @@ public class APIController {
       seatRepository.save(currSeat);
 
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
+   }
+
+   @PostMapping("/getAllSchedulesForUser")
+   public List<OrderHistory> getAllCurrentSchedules(@RequestBody Map<String, String> body) {
+      int userID = Integer.parseInt(body.get("userID"));
+      List<String> scheduleID = scheduleRepository.findScheduleUser(userID);
+      List<String> bookingID = scheduleRepository.findBookingUser(userID);
+      List<String> costs = scheduleRepository.findCostUser(userID);
+      
+      List<OrderHistory> orderHistory = new ArrayList<>();
+      for (int i = 0; i < scheduleID.size(); i++) {
+         int currID = Integer.parseInt(scheduleID.get(i));
+         Schedule currSchedule = scheduleService.getSchedule(currID);
+         List<String> seats = seatRepository.findSeats(Integer.parseInt(bookingID.get(i)));
+         String seatsFinal = "";
+         for (int m = 0; m < seats.size(); m++) {
+            if (m != 0) {
+               seatsFinal += ", ";
+            }
+            seatsFinal += seats.get(m);
+         }
+         OrderHistory addThis = new OrderHistory(currSchedule.getMovieShowing(), currSchedule.getShowRoom(), currSchedule.getShowtimedate(), currSchedule.getShowtimestart(), currSchedule.getShowtimefinish(), seatsFinal, costs.get(i));
+         orderHistory.add(addThis);
+      }
+      return orderHistory;
    }
 }
 

@@ -16,4 +16,14 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer>{
 
     @Query(value = "SELECT * from showtime where movieShowing = :movieName AND showtimedate BETWEEN :date1 AND :date2", nativeQuery = true)
     List<Schedule> findMovieSchedules(@Param("movieName") String movieName, @Param("date1") java.sql.Date date1, @Param("date2") java.sql.Date date2);
+
+    @Query(value = "SELECT showtimeBooked from booking WHERE userBooked = :userID", nativeQuery = true)
+    List<String> findScheduleUser(@Param("userID") int userID);
+
+    @Query(value = "SELECT bookingID from booking WHERE userBooked = :userID", nativeQuery = true)
+    List<String> findBookingUser(@Param("userID") int userID);
+
+    @Query(value = "SELECT totalCost from booking WHERE userBooked = :userID", nativeQuery = true)
+    List<String> findCostUser(@Param("userID") int userID);
+
 }
