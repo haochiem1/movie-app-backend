@@ -12,5 +12,8 @@ public interface SeatRepository extends JpaRepository<Seat, Integer>{
 
     @Query(value = "SELECT seat from seat WHERE bookingID = :bookID", nativeQuery = true)
     List<String> findSeats(@Param("bookID") int bookID);
+
+    @Query(value = "SELECT seat from seat WHERE showtime = :showtimeID", nativeQuery = true)
+    List<String> numSeats(@Param("showtimeID") int showtimeID);
     
 }

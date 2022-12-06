@@ -717,6 +717,13 @@ public class APIController {
       return ResponseEntity.status(HttpStatus.ACCEPTED).body("3"); // new user created
    }
 
+   @PostMapping("/getNumSchedules")
+   public int getNumSchedules(@RequestBody Map<String, String> body) {
+      int showID = Integer.parseInt(body.get("showtimeID"));
+      List<String> seats = seatRepository.numSeats(showID);
+      return seats.size();
+   }
+
    @PostMapping("/getAllSchedulesForUser")
    public List<OrderHistory> getAllCurrentSchedules(@RequestBody Map<String, String> body) {
       int userID = Integer.parseInt(body.get("userID"));
